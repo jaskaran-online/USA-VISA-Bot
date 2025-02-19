@@ -1,4 +1,6 @@
-# Usa VISA appointment bot for [AIS](https://ais.usvisa-info.com/) region
+# USA VISA appointment bot for [AIS](https://ais.usvisa-info.com/) region
+
+This project is forked from [original USA-VISA-Bot](https://github.com/aigrvch/USA-VISA-Bot).
 
 ### !!Use this bot on your own risk!!
 
