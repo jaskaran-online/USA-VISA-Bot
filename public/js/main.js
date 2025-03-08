@@ -83,8 +83,43 @@ document.getElementById('botForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Handle bot actions (stop/restart)
+// Handle bot selection and actions
 document.getElementById('activeBots').addEventListener('click', async (e) => {
+    const botInstance = e.target.closest('.bot-instance');
+    if (!botInstance) return;
+
+    // Handle bot selection
+    if (e.target === botInstance || e.target.closest('.bot-header')) {
+        document.querySelectorAll('.bot-instance').forEach(bot => bot.classList.remove('selected'));
+        botInstance.classList.add('selected');
+        // Show logs for selected bot
+        const botId = botInstance.dataset.botId;
+        const bots = botStore.get();
+        if (bots[botId]) {
+            const logsDiv = botInstance.querySelector('.bot-logs');
+            logsDiv.innerHTML = '';
+            bots[botId].logs.forEach(log => {
+                const logDiv = document.createElement('div');
+                logDiv.className = `log-entry ${log.type || 'info'}`;
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'log-time';
+                timeSpan.textContent = new Date(log.timestamp).toLocaleTimeString();
+                
+                const messageSpan = document.createElement('span');
+                messageSpan.className = 'log-message';
+                messageSpan.textContent = typeof log === 'string' ? log : log.message;
+                
+                logDiv.appendChild(timeSpan);
+                logDiv.appendChild(messageSpan);
+                logsDiv.appendChild(logDiv);
+            });
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+        return;
+    }
+
+    // Handle bot actions
     if (e.target.classList.contains('stop-bot') || e.target.classList.contains('restart-bot')) {
         const botInstance = e.target.closest('.bot-instance');
         const botId = botInstance.dataset.botId;
@@ -120,24 +155,27 @@ socket.on('bot-log', ({ id, message, type, timestamp }) => {
         bots[id].logs.push(logEntry);
         botStore.set(bots);
         
-        const botInstance = document.querySelector(`.bot-instance[data-bot-id="${id}"]`);
-        if (botInstance) {
-            const logsDiv = botInstance.querySelector('.bot-logs');
-            const logDiv = document.createElement('div');
-            logDiv.className = `log-entry ${type}`;
-            
-            const timeSpan = document.createElement('span');
-            timeSpan.className = 'log-time';
-            timeSpan.textContent = new Date(timestamp).toLocaleTimeString();
-            
-            const messageSpan = document.createElement('span');
-            messageSpan.className = 'log-message';
-            messageSpan.textContent = message;
-            
-            logDiv.appendChild(timeSpan);
-            logDiv.appendChild(messageSpan);
-            logsDiv.appendChild(logDiv);
-            logsDiv.scrollTop = logsDiv.scrollHeight;
+        // Only update logs for the selected bot
+        const selectedBotId = document.querySelector('.bot-instance.selected')?.dataset.botId;
+        if (selectedBotId === id) {
+            const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${id}"] .bot-logs`);
+            if (logsDiv) {
+                const logDiv = document.createElement('div');
+                logDiv.className = `log-entry ${type}`;
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'log-time';
+                timeSpan.textContent = new Date(timestamp).toLocaleTimeString();
+                
+                const messageSpan = document.createElement('span');
+                messageSpan.className = 'log-message';
+                messageSpan.textContent = message;
+                
+                logDiv.appendChild(timeSpan);
+                logDiv.appendChild(messageSpan);
+                logsDiv.appendChild(logDiv);
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+            }
         }
     }
 });
@@ -150,6 +188,8 @@ function addBotToUI(bot) {
     const div = instance.querySelector('.bot-instance');
     
     div.dataset.botId = bot.id;
+    div.classList.add('selected');
+    document.querySelectorAll('.bot-instance').forEach(b => b.classList.remove('selected'));
     updateBotUI(bot.id, bot);
     container.appendChild(div);
 }
@@ -159,7 +199,7 @@ function updateBotUI(id, bot) {
     const div = document.querySelector(`.bot-instance[data-bot-id="${id}"]`);
     if (!div) return;
     
-    div.querySelector('.bot-email').textContent = bot.config.EMAIL;
+    div.querySelector('.bot-email').textContent = `Bot ${id} - ${bot.config.EMAIL}`;
     div.querySelector('.bot-country').textContent = COUNTRIES[bot.config.COUNTRY];
     div.querySelector('.bot-start-time').textContent = `Started: ${new Date(bot.startTime).toLocaleString()}`;
     const status = bot.status || 'running';
@@ -178,24 +218,28 @@ function updateBotUI(id, bot) {
         restartBtn.style.display = 'none';
     }
     
-    const logsDiv = div.querySelector('.bot-logs');
-    logsDiv.innerHTML = '';
-    bot.logs?.forEach(log => {
-        const logDiv = document.createElement('div');
-        logDiv.className = `log-entry ${log.type || 'info'}`;
-        
-        const timeSpan = document.createElement('span');
-        timeSpan.className = 'log-time';
-        timeSpan.textContent = new Date(log.timestamp || bot.startTime).toLocaleTimeString();
-        
-        const messageSpan = document.createElement('span');
-        messageSpan.className = 'log-message';
-        messageSpan.textContent = typeof log === 'string' ? log : log.message;
-        
-        logDiv.appendChild(timeSpan);
-        logDiv.appendChild(messageSpan);
-        logsDiv.appendChild(logDiv);
-    });
+    // Only update logs if this is the selected bot
+    if (div.classList.contains('selected')) {
+        const logsDiv = div.querySelector('.bot-logs');
+        logsDiv.innerHTML = '';
+        bot.logs?.forEach(log => {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${log.type || 'info'}`;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'log-time';
+            timeSpan.textContent = new Date(log.timestamp || bot.startTime).toLocaleTimeString();
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'log-message';
+            messageSpan.textContent = typeof log === 'string' ? log : log.message;
+            
+            logDiv.appendChild(timeSpan);
+            logDiv.appendChild(messageSpan);
+            logsDiv.appendChild(logDiv);
+        });
+        logsDiv.scrollTop = logsDiv.scrollHeight;
+    }
 }
 
 // Load active bots on page load

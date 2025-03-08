@@ -54,6 +54,18 @@
             background-color: #ecfdf5;
             color: #059669;
         }
+        .bot-instance {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .bot-instance:hover {
+            background-color: #f9fafb;
+        }
+        .bot-instance.selected {
+            border-color: #4f46e5;
+            background-color: #f5f3ff;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -113,7 +125,7 @@
     <!-- Bot Template -->
     <template id="botTemplate">
         <div class="bot-instance border rounded-lg p-4">
-            <div class="flex justify-between items-start mb-4">
+            <div class="flex justify-between items-start mb-4 bot-header">
                 <div>
                     <h3 class="font-semibold bot-email"></h3>
                     <p class="text-sm text-gray-500 bot-country"></p>
