@@ -98,7 +98,7 @@ setInterval(() => {
       status: bot.status
     };
   }
-  fs.writeFileSync(BOTS_FILE, JSON.stringify(botsData, null, 2));
+  // fs.writeFileSync(BOTS_FILE, JSON.stringify(botsData, null, 2));
 }, 5000);
 
 // Save bots to file
