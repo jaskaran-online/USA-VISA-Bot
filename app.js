@@ -245,6 +245,11 @@ app.post('/api/bot/restart/:id', (req, res) => {
       // Format the message
       const formattedMessage = formatLogMessage(message, type);
       
+      // Skip if the message should be filtered out
+      if (formattedMessage === null) {
+        return;
+      }
+      
       // Check for duplicate messages
       if (formattedMessage === lastLogMessage) {
         duplicateCount++;
@@ -351,35 +356,8 @@ app.get('/api/bots', (req, res) => {
 function formatLogMessage(message, type = 'info') {
   // Add emoji based on message type
   let emoji = '';
-  if (type === 'error') {
-    emoji = '❌ ';
-  } else if (message.includes('Wait')) {
-    emoji = '⏳ ';
-  } else if (message.includes('Get sign in')) {
-    emoji = '🔑 ';
-  } else if (message.includes('Post sing in') || message.includes('Post sign in')) {
-    emoji = '🔐 ';
-  } else if (message.includes('Get current appointment')) {
-    emoji = '📅 ';
-  } else if (message.includes('Current appointment date')) {
-    emoji = '📆 ';
-  } else if (message.includes('Init csrf')) {
-    emoji = '🔒 ';
-  } else if (message.includes('Get new appointment')) {
-    emoji = '🔍 ';
-  } else if (message.includes('cleared')) {
-    emoji = '🧹 ';
-  } else if (message.includes('stopped')) {
-    emoji = '🛑 ';
-  } else if (message.includes('started')) {
-    emoji = '▶️ ';
-  } else if (message.includes('finished') || message.includes('completed')) {
-    emoji = '✅ ';
-  } else {
-    emoji = 'ℹ️ ';
-  }
   
-  // Clean up message
+  // Clean up message first
   let cleanMessage = message;
   
   // Remove timestamps from error messages
@@ -392,14 +370,84 @@ function formatLogMessage(message, type = 'info') {
     cleanMessage = cleanMessage.replace(/https:\/\/ais\.usvisa-info\.com:\d+\s+"([A-Z]+)\s+([^"]+)\s+HTTP\/1\.1"\s+(\d+).*/, 'Request: $1 $2 (Status: $3)');
   }
   
-  // Format appointment date message
-  if (cleanMessage.includes('Current appointment date and time:')) {
-    cleanMessage = cleanMessage.replace('Current appointment date and time:', 'Current appointment:');
+  // Make messages more meaningful
+  if (type === 'error') {
+    emoji = '❌ ';
+    if (cleanMessage.includes('ModuleNotFoundError')) {
+      cleanMessage = cleanMessage.replace(/ModuleNotFoundError: No module named '([^']+)'/, 'Missing Python module: "$1". Please run setup.sh to install dependencies.');
+    } else if (cleanMessage.includes('DeprecationWarning')) {
+      // Hide deprecation warnings as they're not critical
+      return null;
+    }
+  } else if (cleanMessage === 'Wait' || cleanMessage.includes('Wait')) {
+    emoji = '⏳ ';
+    cleanMessage = 'Searching for available appointment slots...';
+  } else if (cleanMessage.includes('Get sign in')) {
+    emoji = '🔑 ';
+    cleanMessage = 'Logging into visa appointment system...';
+  } else if (cleanMessage.includes('Post sing in') || cleanMessage.includes('Post sign in')) {
+    emoji = '🔐 ';
+    cleanMessage = 'Authenticating with credentials...';
+  } else if (cleanMessage.includes('Get current appointment')) {
+    emoji = '📅 ';
+    cleanMessage = 'Retrieving your current appointment details...';
+  } else if (cleanMessage.includes('Current appointment date')) {
+    emoji = '📆 ';
+    cleanMessage = cleanMessage.replace('Current appointment date and time:', 'Your current appointment:');
+  } else if (cleanMessage.includes('Init csrf')) {
+    emoji = '🔒 ';
+    cleanMessage = 'Initializing secure session...';
+  } else if (cleanMessage.includes('Get new appointment')) {
+    emoji = '🔍 ';
+    cleanMessage = 'Checking for new appointment availability...';
+  } else if (cleanMessage.includes('Get available date')) {
+    emoji = '📆 ';
+    cleanMessage = 'Retrieving available appointment dates...';
+  } else if (cleanMessage.includes('Get available time')) {
+    emoji = '🕒 ';
+    cleanMessage = 'Retrieving available appointment times...';
+  } else if (cleanMessage.includes('All available dates')) {
+    emoji = '📅 ';
+    cleanMessage = cleanMessage.replace(/All available dates: \[(.*)\]/, 'Available dates found: $1');
+  } else if (cleanMessage.includes('All available times')) {
+    emoji = '🕓 ';
+    cleanMessage = cleanMessage.replace(/All available times for date ([^:]+): \[(.*)\]/, 'Available times for $1: $2');
+  } else if (cleanMessage.includes('Next nearest date')) {
+    emoji = '📌 ';
+    cleanMessage = cleanMessage.replace('Next nearest date:', 'Checking date:');
+  } else if (cleanMessage.includes('Next nearest time')) {
+    emoji = '⏰ ';
+    cleanMessage = cleanMessage.replace('Next nearest time:', 'Checking time:');
+  } else if (cleanMessage.includes('Try to book')) {
+    emoji = '🎯 ';
+    cleanMessage = 'Attempting to book appointment...';
+  } else if (cleanMessage.includes('Booked at')) {
+    emoji = '✅ ';
+    cleanMessage = 'Success! Appointment booked successfully!';
+  } else if (cleanMessage.includes('cleared')) {
+    emoji = '🧹 ';
+  } else if (cleanMessage.includes('stopped')) {
+    emoji = '🛑 ';
+  } else if (cleanMessage.includes('started')) {
+    emoji = '▶️ ';
+  } else if (cleanMessage.includes('finished') || cleanMessage.includes('completed')) {
+    emoji = '✅ ';
+  } else if (cleanMessage.includes('No available dates')) {
+    emoji = '❗ ';
+    cleanMessage = 'No available appointment dates found. Will keep checking...';
+  } else if (cleanMessage.includes('No available times')) {
+    emoji = '❗ ';
+    cleanMessage = 'No available appointment times found. Will try another date...';
+  } else if (cleanMessage.includes('Response:')) {
+    // Hide raw response data as it's not user-friendly
+    return null;
+  } else {
+    emoji = 'ℹ️ ';
   }
   
-  // Format wait message
-  if (cleanMessage === 'Wait') {
-    cleanMessage = 'Waiting for available slots...';
+  // Return null for messages we want to filter out completely
+  if (cleanMessage === null) {
+    return null;
   }
   
   return emoji + cleanMessage;

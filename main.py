@@ -667,9 +667,9 @@ class Bot:
                 now = datetime.now()
                 mod = now.minute % 5
 
-                if mod != 0 or now.second < 10:
-                    if now.second % 10 == 0:
-                        self.logger("Wait")
+                if mod != 0 or now.second < 60:
+                    if now.second % 60 == 0:
+                        self.logger("Server is busy, waiting...")
                     continue
 
                 try:
