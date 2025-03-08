@@ -173,6 +173,7 @@ class Appointment:
 class Config:
     def __init__(self, config_file: str):
         self.config_file = config_file
+        self.logger = logging.getLogger()
 
         config_data = dict()
         if not os.path.exists(self.config_file):
@@ -188,79 +189,38 @@ class Config:
                     else:
                         config_data[key] = None
 
-        email = config_data.get("EMAIL")
-        if not email:
-            email = input("Enter email: ")
-        self.email: str = email
+        self.email: str = config_data.get("EMAIL")
+        if not self.email:
+            raise ValueError("Email is required")
 
-        password = config_data.get("PASSWORD")
-        if not password:
-            password = input("Enter password: ")
-        self.password: str = password
+        self.password: str = config_data.get("PASSWORD")
+        if not self.password:
+            raise ValueError("Password is required")
 
-        country = config_data.get("COUNTRY")
-        while not country:
-            country = input(
-                "Select country (enter two letters): \n" + "\n".join(
-                    [key + " " + value for (key, value) in COUNTRIES.items()]
-                ) + "\n"
-            )
-            if country not in COUNTRIES:
-                country = None
-        self.country: str = country
+        self.country: str = config_data.get("COUNTRY")
+        if not self.country or self.country not in COUNTRIES:
+            raise ValueError("Valid country code is required")
 
         min_date = config_data.get("MIN_DATE")
-        try:
-            if min_date:
-                min_date = datetime.strptime(min_date, DATE_FORMAT)
-        except ValueError | TypeError:
-            min_date = None
-        while not min_date:
+        if min_date:
             try:
-                min_date = input(
-                    "Enter minimal appointment date in format day.month.year "
-                    "(example 10.01.2002) or leave blank: "
-                )
-                if min_date:
-                    min_date = datetime.strptime(min_date, DATE_FORMAT)
-                else:
-                    min_date = datetime.now()
+                min_date = datetime.strptime(min_date, DATE_FORMAT)
             except ValueError | TypeError:
-                pass
+                min_date = datetime.now()
+        else:
+            min_date = datetime.now()
         self.min_date: date = min_date.date()
 
-        init_max_date = "MAX_DATE" not in config_data
         max_date = config_data.get("MAX_DATE")
-        try:
-            if max_date:
+        if max_date:
+            try:
                 max_date = datetime.strptime(max_date, DATE_FORMAT)
-        except ValueError | TypeError:
-            max_date = None
-        if init_max_date:
-            while True:
-                try:
-                    max_date = input(
-                        "Enter maximal appointment date in format day.month.year "
-                        "(example 10.01.2002) or leave blank (but make note, "
-                        "it may lead to the exhaustion of the transfer limit): "
-                    )
-                    if max_date:
-                        max_date = datetime.strptime(max_date, DATE_FORMAT)
-                    else:
-                        max_date = None
-                    break
-                except ValueError | TypeError:
-                    pass
+            except ValueError | TypeError:
+                max_date = None
         self.max_date: Optional[date] = max_date.date() if max_date else None
 
-        need_asc = config_data.get("NEED_ASC")
-        if need_asc is None:
-            need_asc = input(
-                "Do you need ASC registration (Y/N. Enter N, if you don't know, what is it)?: "
-            ).upper() == "Y"
-        else:
-            need_asc = need_asc == "True"
-        self.need_asc = need_asc
+        # ASC registration is always disabled by default
+        self.need_asc = False
 
         self.schedule_id: Optional[str] = config_data.get("SCHEDULE_ID")
 
@@ -274,40 +234,23 @@ class Config:
         self.__save()
 
     def set_facility_id(self, locations: dict[str, str]):
-        self.facility_id = self.__choose_location(locations, "consul")
+        # Always select the first available facility
+        self.facility_id = next(iter(locations))
+        print(f"Auto-selected consul facility: {self.facility_id} - {locations[self.facility_id]}")
         self.__save()
 
     def set_asc_facility_id(self, locations: dict[str, str]):
-        self.asc_facility_id = self.__choose_location(locations, "asc")
+        # Always select the first available ASC facility
+        self.asc_facility_id = next(iter(locations))
+        print(f"Auto-selected ASC facility: {self.asc_facility_id} - {locations[self.asc_facility_id]}")
         self.__save()
 
     def set_schedule_id(self, schedule_ids: dict[str, Appointment]):
-        self.schedule_id = Config.__choose(
-            schedule_ids,
-            f"Choose schedule id (enter number): \n" +
-            "\n".join([x[0] + "  " + x[1].description for x in schedule_ids.items()]) + "\n"
-        )
+        # Always select the first available schedule
+        self.schedule_id = next(iter(schedule_ids))
+        selected_appointment = schedule_ids[self.schedule_id]
+        print(f"Auto-selected schedule: {self.schedule_id} - {selected_appointment.description}")
         self.__save()
-
-    @staticmethod
-    def __choose_location(locations: dict[str, str], location_name: str) -> str:
-        return Config.__choose(
-            locations,
-            f"Choose {location_name} location (enter number): \n" +
-            "\n".join([x[0] + "  " + x[1] for x in locations.items()]) + "\n"
-        )
-
-    @staticmethod
-    def __choose(values: dict, message: str) -> str:
-        if len(values) == 1:
-            return next(iter(values))
-
-        value = None
-        while not value:
-            value = input(message)
-            if value not in values:
-                value = None
-        return value
 
     def __save(self):
         with open(self.config_file, "w") as f:

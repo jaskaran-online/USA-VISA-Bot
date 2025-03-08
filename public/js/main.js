@@ -83,24 +83,31 @@ document.getElementById('botForm').addEventListener('submit', async (e) => {
     }
 });
 
-// Handle bot stopping
+// Handle bot actions (stop/restart)
 document.getElementById('activeBots').addEventListener('click', async (e) => {
-    if (e.target.classList.contains('stop-bot')) {
+    if (e.target.classList.contains('stop-bot') || e.target.classList.contains('restart-bot')) {
         const botInstance = e.target.closest('.bot-instance');
         const botId = botInstance.dataset.botId;
+        const action = e.target.classList.contains('stop-bot') ? 'stop' : 'restart';
         
         try {
-            const response = await fetch(`/api/bot/stop/${botId}`, {
+            const response = await fetch(`/api/bot/${action}/${botId}`, {
                 method: 'POST'
             });
             
-            if (!response.ok) throw new Error('Failed to stop bot');
+            if (!response.ok) throw new Error(`Failed to ${action} bot`);
             
-            botStore.remove(botId);
-            botInstance.remove();
+            if (action === 'stop') {
+                const bots = botStore.get();
+                if (bots[botId]) {
+                    bots[botId].status = 'stopped';
+                    botStore.set(bots);
+                    updateBotUI(botId, bots[botId]);
+                }
+            }
         } catch (error) {
-            console.error('Error stopping bot:', error);
-            alert('Failed to stop bot. Please try again.');
+            console.error(`Error ${action}ing bot:`, error);
+            alert(`Failed to ${action} bot. Please try again.`);
         }
     }
 });
@@ -143,11 +150,36 @@ function addBotToUI(bot) {
     const div = instance.querySelector('.bot-instance');
     
     div.dataset.botId = bot.id;
+    updateBotUI(bot.id, bot);
+    container.appendChild(div);
+}
+
+// Update bot UI
+function updateBotUI(id, bot) {
+    const div = document.querySelector(`.bot-instance[data-bot-id="${id}"]`);
+    if (!div) return;
+    
     div.querySelector('.bot-email').textContent = bot.config.EMAIL;
     div.querySelector('.bot-country').textContent = COUNTRIES[bot.config.COUNTRY];
     div.querySelector('.bot-start-time').textContent = `Started: ${new Date(bot.startTime).toLocaleString()}`;
+    const status = bot.status || 'running';
+    const statusEl = div.querySelector('.bot-status');
+    statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    statusEl.dataset.status = status;
+    
+    const stopBtn = div.querySelector('.stop-bot');
+    const restartBtn = div.querySelector('.restart-bot');
+    
+    if (status === 'stopped' || status === 'error' || status === 'completed') {
+        stopBtn.style.display = 'none';
+        restartBtn.style.display = 'inline-block';
+    } else {
+        stopBtn.style.display = 'inline-block';
+        restartBtn.style.display = 'none';
+    }
     
     const logsDiv = div.querySelector('.bot-logs');
+    logsDiv.innerHTML = '';
     bot.logs?.forEach(log => {
         const logDiv = document.createElement('div');
         logDiv.className = `log-entry ${log.type || 'info'}`;
@@ -164,8 +196,6 @@ function addBotToUI(bot) {
         logDiv.appendChild(messageSpan);
         logsDiv.appendChild(logDiv);
     });
-    
-    container.appendChild(div);
 }
 
 // Load active bots on page load

@@ -32,6 +32,28 @@
         .log-entry.error .log-time {
             color: #fc8181;
         }
+        .bot-status {
+            margin-top: 0.25rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            display: inline-block;
+        }
+        .bot-status[data-status='running'] {
+            background-color: #ebf5ff;
+            color: #2563eb;
+        }
+        .bot-status[data-status='stopped'] {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        .bot-status[data-status='error'] {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+        .bot-status[data-status='completed'] {
+            background-color: #ecfdf5;
+            color: #059669;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -96,10 +118,16 @@
                     <h3 class="font-semibold bot-email"></h3>
                     <p class="text-sm text-gray-500 bot-country"></p>
                     <p class="text-sm text-gray-500 bot-start-time"></p>
+                    <p class="bot-status" data-status="running"></p>
                 </div>
-                <button class="stop-bot bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                    Stop
-                </button>
+                <div class="space-x-2">
+                    <button class="stop-bot bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        Stop
+                    </button>
+                    <button class="restart-bot bg-green-600 text-white py-1 px-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2" style="display: none;">
+                        Restart
+                    </button>
+                </div>
             </div>
             <div class="bot-logs h-48 overflow-y-auto bg-gray-50 p-2 rounded text-sm font-mono space-y-1">
             </div>
