@@ -39,6 +39,7 @@ graph TD
 - Real-time log updates via Socket.IO
 - Dashboard with bot statistics
 - User-friendly form for bot configuration
+- Bot identification and management
 
 ### 2. Node.js Server
 - Express.js web server
@@ -46,6 +47,7 @@ graph TD
 - PythonShell for Python process management
 - File-based storage for bot configurations
 - Email notification system via SMTP
+- Multi-bot orchestration
 
 ### 3. Python Bot
 ```mermaid
@@ -57,7 +59,7 @@ sequenceDiagram
     participant USVISA System
     participant EmailService
     
-    User->>WebUI: Configure bot
+    User->>WebUI: Configure bot with name
     WebUI->>NodeServer: Start bot request
     NodeServer->>PythonBot: Launch with config
     PythonBot->>USVISA System: Login
@@ -87,6 +89,7 @@ sequenceDiagram
    - Intuitive bot configuration form
    - Responsive design for mobile and desktop
    - Clear visual indicators of bot status
+   - Named bot instances for easy identification
 
 2. **Enhanced Logging System**
    - Real-time log updates with emoji indicators
@@ -94,24 +97,28 @@ sequenceDiagram
    - Log deduplication to reduce noise
    - Automatic log cleanup to manage memory usage
    - Direct display in UI without JSON storage
+   - Per-bot log filtering and management
 
 3. **Bot Management**
-   - Multiple bot support
+   - Multiple bot support with unique names
    - Start/stop/restart functionality
    - Persistent configuration storage
    - Manual and automatic startup options
+   - Individual bot control and monitoring
 
 4. **Containerization**
    - Docker support for easy deployment
    - Docker Compose for simplified orchestration
    - Volume mounting for data persistence
    - Cross-platform compatibility
+   - Environment-based configuration
 
 5. **Appointment System**
    - Automated login and session management
    - Continuous monitoring of available dates
    - Intelligent date comparison
    - Support for multiple facilities
+   - Configurable date preferences
 
 6. **Email Notifications**
    - Automatic email alerts when appointments are booked
@@ -119,11 +126,13 @@ sequenceDiagram
    - Gmail SMTP integration with app password support
    - Detailed HTML email with appointment information
    - Configurable recipient address
+   - Bot name included in notifications for identification
 
 ## Configuration Options
 
 | Parameter | Description | Required |
 |-----------|-------------|----------|
+| BOT_NAME | Friendly name for the bot | No |
 | EMAIL | User's email address | Yes |
 | PASSWORD | Account password | Yes |
 | COUNTRY | Country code (e.g., 'ca' for Canada) | Yes |
@@ -151,6 +160,27 @@ The bot supports scheduling in multiple countries including:
 - India (in)
 - And many more (see COUNTRIES dictionary in code)
 
+## Bot Workflow
+
+```mermaid
+stateDiagram-v2
+    [*] --> Configured: User creates bot with name
+    Configured --> Stopped: Initial state
+    Stopped --> Running: User clicks Start/Restart
+    Running --> Monitoring: Bot logs in
+    Monitoring --> Checking: Check for dates
+    Checking --> Monitoring: No better dates
+    Checking --> Booking: Better date found
+    Booking --> Success: Appointment booked
+    Booking --> Monitoring: Booking failed
+    Success --> EmailSent: Send notification
+    EmailSent --> Monitoring: Continue monitoring
+    Monitoring --> Stopped: User clicks Stop
+    Running --> Error: Login failed
+    Error --> Stopped: User intervention
+    Stopped --> [*]: User deletes bot
+```
+
 ## Deployment Options
 
 ### 1. Local Development
@@ -161,6 +191,7 @@ flowchart LR
     C --> D[Configure .env file]
     D --> E[Start Node.js Server]
     E --> F[Access Web UI]
+    F --> G[Create Named Bots]
 ```
 
 ### 2. Docker Deployment
@@ -170,6 +201,7 @@ flowchart LR
     B --> C[Build Docker Image]
     C --> D[Run Docker Container]
     D --> E[Access Web UI]
+    E --> F[Create Named Bots]
 ```
 
 ## Email Notification System
@@ -183,12 +215,32 @@ sequenceDiagram
     participant User as User's Inbox
     
     Bot->>Server: Appointment booked notification
-    Server->>Email: Send notification request
+    Server->>Email: Send notification request with bot name
     Email->>Email: Create HTML email template
     Email->>Gmail: Send via SMTP
     Gmail->>User: Deliver email notification
     Email->>Server: Notification status
     Server->>Bot: Log notification result
+```
+
+## Multi-Bot Management
+
+```mermaid
+flowchart TD
+    A[Web UI] --> B[Bot List View]
+    B --> C[Individual Bot Cards]
+    C --> D[Bot Controls]
+    D --> E[Start/Stop/Restart]
+    D --> F[View Logs]
+    D --> G[Clear Logs]
+    D --> H[Delete Bot]
+    
+    I[Add New Bot] --> J[Configure Bot]
+    J --> K[Set Bot Name]
+    J --> L[Set Credentials]
+    J --> M[Set Parameters]
+    J --> N[Create Bot]
+    N --> B
 ```
 
 ## Error Handling
@@ -220,6 +272,7 @@ flowchart TD
    - Environment variables for sensitive data
    - Secure session management
    - HTTPS communication
+   - Bot isolation for multi-user environments
 
 3. **User Experience**
    - Meaningful log messages
@@ -227,9 +280,11 @@ flowchart TD
    - Automatic cleanup of repetitive logs
    - Clear error messages with suggested fixes
    - Email notifications for important events
+   - Named bots for easy identification and management
 
 4. **Resource Management**
    - Efficient memory usage
    - Automatic log rotation
    - Proper process termination
    - Docker resource constraints
+   - Per-bot resource allocation

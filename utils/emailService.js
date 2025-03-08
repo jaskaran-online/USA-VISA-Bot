@@ -23,6 +23,7 @@ const createTransporter = () => {
 /**
  * Send an email notification when an appointment is successfully scheduled
  * @param {Object} options - Email options
+ * @param {string} options.botName - Name of the bot
  * @param {string} options.botEmail - Email used for the visa account
  * @param {string} options.appointmentDate - The scheduled appointment date
  * @param {string} options.appointmentTime - The scheduled appointment time
@@ -47,12 +48,13 @@ const sendAppointmentNotification = async (options) => {
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: recipientEmail,
-      subject: '🎉 Visa Appointment Successfully Scheduled!',
+      subject: `🎉 Visa Appointment Successfully Scheduled by ${options.botName}!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px;">
           <h2 style="color: #4f46e5; text-align: center;">Visa Appointment Successfully Scheduled!</h2>
           
           <div style="background-color: #f5f3ff; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Bot Name:</strong> ${options.botName}</p>
             <p style="margin: 5px 0;"><strong>Account:</strong> ${options.botEmail}</p>
             <p style="margin: 5px 0;"><strong>Date:</strong> ${options.appointmentDate}</p>
             <p style="margin: 5px 0;"><strong>Time:</strong> ${options.appointmentTime}</p>

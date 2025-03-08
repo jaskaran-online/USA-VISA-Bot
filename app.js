@@ -172,6 +172,7 @@ app.post('/api/bot/start', (req, res) => {
   // Create bot data but don't start the bot automatically
   const botData = {
     id: configId,
+    name: config.BOT_NAME || `Bot ${configId.slice(-4)}`, // Use provided name or generate one
     config,
     status: 'stopped',
     startTime: new Date().toISOString(),
@@ -184,7 +185,7 @@ app.post('/api/bot/start', (req, res) => {
   // Emit initial log message to client
   io.emit('bot-log', { 
     id: configId, 
-    message: formatLogMessage('Bot created. Click "Restart" to start the bot.'), 
+    message: formatLogMessage(`Bot "${botData.name}" created. Click "Restart" to start the bot.`), 
     type: 'info', 
     timestamp: new Date().toISOString() 
   });
@@ -313,6 +314,7 @@ app.post('/api/bot/restart/:id', (req, res) => {
         // Send email notification if environment variables are set
         if (process.env.NOTIFICATION_EMAIL && process.env.SENDER_EMAIL && process.env.SENDER_PASSWORD) {
           sendAppointmentNotification({
+            botName: bot.name || `Bot ${id.slice(-4)}`,
             botEmail: bot.config.EMAIL,
             appointmentDate: appointmentDetails.date || 'Check your account',
             appointmentTime: appointmentDetails.time || 'Check your account',
