@@ -190,6 +190,10 @@ function addBotToUI(bot) {
     div.dataset.botId = bot.id;
     div.classList.add('selected');
     document.querySelectorAll('.bot-instance').forEach(b => b.classList.remove('selected'));
+    
+    // Set email in bot header
+    div.querySelector('.bot-email').textContent = bot.config.EMAIL || 'No email';
+    
     updateBotUI(bot.id, bot);
     container.appendChild(div);
 }
@@ -199,12 +203,33 @@ function updateBotUI(id, bot) {
     const div = document.querySelector(`.bot-instance[data-bot-id="${id}"]`);
     if (!div) return;
     
-    div.querySelector('.bot-email').textContent = `Bot ${id} - ${bot.config.EMAIL}`;
-    div.querySelector('.bot-country').textContent = COUNTRIES[bot.config.COUNTRY];
-    div.querySelector('.bot-start-time').textContent = `Started: ${new Date(bot.startTime).toLocaleString()}`;
+    // Update email
+    div.querySelector('.bot-email').textContent = `Bot ${id} - ${bot.config.EMAIL || 'No email'}`;
+    // Add country with globe icon
+    const countryEl = div.querySelector('.bot-country');
+    countryEl.innerHTML = `
+        <svg class="inline w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        ${COUNTRIES[bot.config.COUNTRY]}
+    `;
+    // Add start time with clock icon
+    const startTimeEl = div.querySelector('.bot-start-time');
+    startTimeEl.innerHTML = `
+        <svg class="inline w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Started: ${new Date(bot.startTime).toLocaleString()}
+    `;
     const status = bot.status || 'running';
     const statusEl = div.querySelector('.bot-status');
-    statusEl.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    const statusText = {
+        'running': `Active <span class="inline-block animate-pulse">●</span>`,
+        'stopped': 'Stopped',
+        'error': 'Error',
+        'completed': 'Done'
+    }[status] || status.charAt(0).toUpperCase() + status.slice(1);
+    statusEl.innerHTML = statusText;
     statusEl.dataset.status = status;
     
     const stopBtn = div.querySelector('.stop-bot');

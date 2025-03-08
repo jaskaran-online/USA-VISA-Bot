@@ -1545,9 +1545,624 @@
         "message": "2025-03-08 18:24:10,586  Wait",
         "type": "error",
         "timestamp": "2025-03-08T12:54:10.586Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:54:30.135Z"
+      },
+      {
+        "message": "2025-03-08 18:24:30,135  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:54:30.136Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:54:40.659Z"
+      },
+      {
+        "message": "2025-03-08 18:24:40,659  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:54:40.659Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:00.206Z"
+      },
+      {
+        "message": "2025-03-08 18:25:00,206  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:00.207Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:10.738Z"
+      },
+      {
+        "message": "2025-03-08 18:25:10,739  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:10.739Z"
+      },
+      {
+        "message": "2025-03-08 18:25:10,745  Resetting dropped connection: ais.usvisa-info.com",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:10.748Z"
+      },
+      {
+        "message": "2025-03-08 18:25:12,425  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:12.427Z"
+      },
+      {
+        "message": "2025-03-08 18:25:12,426  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:12.427Z"
+      },
+      {
+        "message": "2025-03-08 18:25:12,426  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:12.427Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:12.428Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:12.428Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:13.929Z"
+      },
+      {
+        "message": "2025-03-08 18:25:13,929  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:13.929Z"
+      },
+      {
+        "message": "2025-03-08 18:25:15,253  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:15.257Z"
+      },
+      {
+        "message": "2025-03-08 18:25:15,257  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:15.258Z"
+      },
+      {
+        "message": "2025-03-08 18:25:15,257  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:15.259Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:15.259Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:15.259Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:16.758Z"
+      },
+      {
+        "message": "2025-03-08 18:25:16,758  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:16.758Z"
+      },
+      {
+        "message": "2025-03-08 18:25:25,873  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:25.875Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:25.876Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:25.877Z"
+      },
+      {
+        "message": "2025-03-08 18:25:25,876  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:25.877Z"
+      },
+      {
+        "message": "2025-03-08 18:25:25,876  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:25.877Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:27.380Z"
+      },
+      {
+        "message": "2025-03-08 18:25:27,380  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:27.381Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,652  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.652Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:28.652Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:28.653Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,652  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.653Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,652  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.653Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:30.153Z"
+      },
+      {
+        "message": "2025-03-08 18:25:30,153  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:30.154Z"
+      },
+      {
+        "message": "2025-03-08 18:25:32,162  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:32.163Z"
+      },
+      {
+        "message": "2025-03-08 18:25:32,163  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:32.163Z"
+      },
+      {
+        "message": "2025-03-08 18:25:32,163  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:32.163Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:32.163Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:32.163Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:33.666Z"
+      },
+      {
+        "message": "2025-03-08 18:25:33,666  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:33.666Z"
+      },
+      {
+        "message": "2025-03-08 18:25:38,143  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:38.144Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:38.158Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:38.159Z"
+      },
+      {
+        "message": "2025-03-08 18:25:38,158  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:38.159Z"
+      },
+      {
+        "message": "2025-03-08 18:25:38,158  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:38.159Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:39.660Z"
+      },
+      {
+        "message": "2025-03-08 18:25:39,659  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:39.660Z"
+      },
+      {
+        "message": "2025-03-08 18:25:41,025  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:41.026Z"
+      },
+      {
+        "message": "2025-03-08 18:25:41,026  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:41.026Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:41.026Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:41.026Z"
+      },
+      {
+        "message": "2025-03-08 18:25:41,026  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:41.027Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:42.536Z"
+      },
+      {
+        "message": "2025-03-08 18:25:42,532  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:42.537Z"
+      },
+      {
+        "message": "2025-03-08 18:25:43,324  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:43.324Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:43.324Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:43.324Z"
+      },
+      {
+        "message": "2025-03-08 18:25:43,324  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:43.324Z"
+      },
+      {
+        "message": "2025-03-08 18:25:43,324  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:43.324Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:44.827Z"
+      },
+      {
+        "message": "2025-03-08 18:25:44,827  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:44.828Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,514  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.514Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:48.515Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:48.515Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,515  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.516Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,515  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.516Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:50.018Z"
+      },
+      {
+        "message": "2025-03-08 18:25:50,018  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:50.019Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,228  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.228Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,228  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.234Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,229  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.234Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:54.235Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:54.235Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:55.733Z"
+      },
+      {
+        "message": "2025-03-08 18:25:55,732  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:55.733Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,087  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/89.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.088Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:00.089Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:00.089Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,088  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.089Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,089  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.089Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:10.613Z"
+      },
+      {
+        "message": "2025-03-08 18:26:10,613  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:10.614Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:30.166Z"
+      },
+      {
+        "message": "2025-03-08 18:26:30,167  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:30.171Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:40.692Z"
+      },
+      {
+        "message": "2025-03-08 18:26:40,691  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:40.692Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:00.237Z"
+      },
+      {
+        "message": "2025-03-08 18:27:00,237  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:00.238Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:10.768Z"
+      },
+      {
+        "message": "2025-03-08 18:27:10,768  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:10.773Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:23.405Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:23.414Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:33.365Z"
+      },
+      {
+        "message": "2025-03-08 18:27:33,363  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:33.366Z"
+      },
+      {
+        "message": "2025-03-08 18:27:33,369  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:33.370Z"
+      },
+      {
+        "message": "2025-03-08 18:27:34,723  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:34.723Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:34.723Z"
+      },
+      {
+        "message": "2025-03-08 18:27:34,723  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:34.723Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,079  https://ais.usvisa-info.com:443 \"POST /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.079Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,079  Get current appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.079Z"
+      },
+      {
+        "message": "Get current appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:35.079Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,357  https://ais.usvisa-info.com:443 \"GET /en-ca/niv HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.357Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,632  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/account HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.633Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,973  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/groups/44769938 HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.973Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:408: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.980Z"
+      },
+      {
+        "message": "  applications = BeautifulSoup(response.text, HTML_PARSER).findAll(\"div\", {\"class\": \"application\"})",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.980Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:422: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.980Z"
+      },
+      {
+        "message": "  description = ' '.join([x.get_text() for x in application.findAll(\"td\")][0:4])",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.980Z"
+      },
+      {
+        "message": "Init csrf",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:35.983Z"
+      },
+      {
+        "message": "Get new appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:35.983Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,983  Init csrf",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.983Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,983  Get new appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.984Z"
+      },
+      {
+        "message": "2025-03-08 18:27:36,376  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.376Z"
+      },
+      {
+        "message": "Current appointment date and time: 08:45 2025-12-15",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:36.390Z"
+      },
+      {
+        "message": "2025-03-08 18:27:36,389  Current appointment date and time: 08:45 2025-12-15",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.391Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:40.902Z"
+      },
+      {
+        "message": "2025-03-08 18:27:40,902  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:40.903Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:47.850Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:47.864Z"
       }
     ],
-    "status": "running"
+    "status": "stopped"
   },
   "1741438138498": {
     "config": {
@@ -2360,8 +2975,613 @@
         "message": "2025-03-08 18:24:20,976  Wait",
         "type": "error",
         "timestamp": "2025-03-08T12:54:20.979Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:54:40.516Z"
+      },
+      {
+        "message": "2025-03-08 18:24:40,516  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:54:40.517Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:00.065Z"
+      },
+      {
+        "message": "2025-03-08 18:25:00,063  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:00.066Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:10.587Z"
+      },
+      {
+        "message": "2025-03-08 18:25:10,587  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:10.588Z"
+      },
+      {
+        "message": "2025-03-08 18:25:10,592  Resetting dropped connection: ais.usvisa-info.com",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:10.592Z"
+      },
+      {
+        "message": "2025-03-08 18:25:13,320  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:13.326Z"
+      },
+      {
+        "message": "2025-03-08 18:25:13,326  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:13.327Z"
+      },
+      {
+        "message": "2025-03-08 18:25:13,326  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:13.327Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:13.327Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:13.327Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:14.832Z"
+      },
+      {
+        "message": "2025-03-08 18:25:14,832  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:14.832Z"
+      },
+      {
+        "message": "2025-03-08 18:25:17,219  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:17.219Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:17.220Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:17.220Z"
+      },
+      {
+        "message": "2025-03-08 18:25:17,220  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:17.223Z"
+      },
+      {
+        "message": "2025-03-08 18:25:17,220  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:17.224Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:18.726Z"
+      },
+      {
+        "message": "2025-03-08 18:25:18,725  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:18.726Z"
+      },
+      {
+        "message": "2025-03-08 18:25:20,135  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:20.137Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:20.139Z"
+      },
+      {
+        "message": "2025-03-08 18:25:20,139  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:20.141Z"
+      },
+      {
+        "message": "2025-03-08 18:25:20,141  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:20.142Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:20.142Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:21.644Z"
+      },
+      {
+        "message": "2025-03-08 18:25:21,644  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:21.645Z"
+      },
+      {
+        "message": "2025-03-08 18:25:22,900  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:22.901Z"
+      },
+      {
+        "message": "2025-03-08 18:25:22,901  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:22.901Z"
+      },
+      {
+        "message": "2025-03-08 18:25:22,901  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:22.902Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:22.902Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:22.902Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:24.406Z"
+      },
+      {
+        "message": "2025-03-08 18:25:24,405  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:24.407Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,471  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.472Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,472  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.472Z"
+      },
+      {
+        "message": "2025-03-08 18:25:28,472  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:28.472Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:28.472Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:28.472Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:29.976Z"
+      },
+      {
+        "message": "2025-03-08 18:25:29,977  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:29.978Z"
+      },
+      {
+        "message": "2025-03-08 18:25:31,169  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:31.170Z"
+      },
+      {
+        "message": "2025-03-08 18:25:31,170  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:31.171Z"
+      },
+      {
+        "message": "2025-03-08 18:25:31,170  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:31.171Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:31.172Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:31.172Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:32.675Z"
+      },
+      {
+        "message": "2025-03-08 18:25:32,674  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:32.677Z"
+      },
+      {
+        "message": "2025-03-08 18:25:36,439  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:36.439Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:36.441Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:36.441Z"
+      },
+      {
+        "message": "2025-03-08 18:25:36,440  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:36.441Z"
+      },
+      {
+        "message": "2025-03-08 18:25:36,441  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:36.441Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:37.949Z"
+      },
+      {
+        "message": "2025-03-08 18:25:37,946  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:37.951Z"
+      },
+      {
+        "message": "2025-03-08 18:25:42,603  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:42.603Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:42.604Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:42.604Z"
+      },
+      {
+        "message": "2025-03-08 18:25:42,604  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:42.605Z"
+      },
+      {
+        "message": "2025-03-08 18:25:42,604  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:42.605Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:44.105Z"
+      },
+      {
+        "message": "2025-03-08 18:25:44,105  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:44.105Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,384  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.384Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,385  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.385Z"
+      },
+      {
+        "message": "2025-03-08 18:25:48,385  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:48.385Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:48.385Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:48.385Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:49.891Z"
+      },
+      {
+        "message": "2025-03-08 18:25:49,890  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:49.891Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,092  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.092Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:54.093Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:54.093Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,092  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.093Z"
+      },
+      {
+        "message": "2025-03-08 18:25:54,093  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:54.093Z"
+      },
+      {
+        "message": "Get available date",
+        "type": "info",
+        "timestamp": "2025-03-08T12:55:55.599Z"
+      },
+      {
+        "message": "2025-03-08 18:25:55,598  Get available date",
+        "type": "error",
+        "timestamp": "2025-03-08T12:55:55.600Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,077  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment/days/94.json?appointments%5Bexpedite%5D=false HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.078Z"
+      },
+      {
+        "message": "Response: []",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:00.080Z"
+      },
+      {
+        "message": "No available dates",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:00.080Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,080  Response: []",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.081Z"
+      },
+      {
+        "message": "2025-03-08 18:26:00,080  No available dates",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:00.081Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:10.610Z"
+      },
+      {
+        "message": "2025-03-08 18:26:10,609  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:10.610Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:30.142Z"
+      },
+      {
+        "message": "2025-03-08 18:26:30,141  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:30.146Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:56:40.667Z"
+      },
+      {
+        "message": "2025-03-08 18:26:40,667  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:56:40.668Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:00.195Z"
+      },
+      {
+        "message": "2025-03-08 18:27:00,195  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:00.196Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:10.724Z"
+      },
+      {
+        "message": "2025-03-08 18:27:10,723  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:10.724Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:23.411Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:23.421Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:33.363Z"
+      },
+      {
+        "message": "2025-03-08 18:27:33,363  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:33.366Z"
+      },
+      {
+        "message": "2025-03-08 18:27:33,369  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:33.369Z"
+      },
+      {
+        "message": "2025-03-08 18:27:34,738  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:34.740Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:34.742Z"
+      },
+      {
+        "message": "2025-03-08 18:27:34,742  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:34.744Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,368  https://ais.usvisa-info.com:443 \"POST /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.368Z"
+      },
+      {
+        "message": "Get current appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:35.369Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,369  Get current appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.369Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,656  https://ais.usvisa-info.com:443 \"GET /en-ca/niv HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.656Z"
+      },
+      {
+        "message": "2025-03-08 18:27:35,948  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/account HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:35.948Z"
+      },
+      {
+        "message": "2025-03-08 18:27:36,582  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/groups/44769938 HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.587Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:408: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.597Z"
+      },
+      {
+        "message": "  applications = BeautifulSoup(response.text, HTML_PARSER).findAll(\"div\", {\"class\": \"application\"})",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.598Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:422: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.598Z"
+      },
+      {
+        "message": "  description = ' '.join([x.get_text() for x in application.findAll(\"td\")][0:4])",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.598Z"
+      },
+      {
+        "message": "Init csrf",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:36.599Z"
+      },
+      {
+        "message": "Get new appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:36.599Z"
+      },
+      {
+        "message": "2025-03-08 18:27:36,599  Init csrf",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.599Z"
+      },
+      {
+        "message": "2025-03-08 18:27:36,599  Get new appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:36.599Z"
+      },
+      {
+        "message": "2025-03-08 18:27:37,335  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:37.335Z"
+      },
+      {
+        "message": "Current appointment date and time: 08:45 2025-12-15",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:37.341Z"
+      },
+      {
+        "message": "2025-03-08 18:27:37,341  Current appointment date and time: 08:45 2025-12-15",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:37.341Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:40.351Z"
+      },
+      {
+        "message": "2025-03-08 18:27:40,351  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:40.351Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T12:57:47.842Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T12:57:47.858Z"
       }
     ],
-    "status": "running"
+    "status": "stopped"
   }
 }

@@ -34,25 +34,31 @@
         }
         .bot-status {
             margin-top: 0.25rem;
-            padding: 0.125rem 0.5rem;
-            border-radius: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
             display: inline-block;
+            font-weight: 500;
+            text-transform: capitalize;
         }
         .bot-status[data-status='running'] {
             background-color: #ebf5ff;
             color: #2563eb;
+            border: 1px solid #93c5fd;
         }
         .bot-status[data-status='stopped'] {
             background-color: #f3f4f6;
             color: #4b5563;
+            border: 1px solid #d1d5db;
         }
         .bot-status[data-status='error'] {
             background-color: #fee2e2;
             color: #dc2626;
+            border: 1px solid #fca5a5;
         }
         .bot-status[data-status='completed'] {
             background-color: #ecfdf5;
             color: #059669;
+            border: 1px solid #6ee7b7;
         }
         .bot-instance {
             cursor: pointer;
@@ -144,10 +150,17 @@
         <div class="bot-instance border rounded-lg p-4">
             <div class="flex justify-between items-start mb-4 bot-header">
                 <div>
-                    <h3 class="font-semibold bot-email"></h3>
-                    <p class="text-sm text-gray-500 bot-country"></p>
-                    <p class="text-sm text-gray-500 bot-start-time"></p>
-                    <p class="bot-status" data-status="running"></p>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="flex items-center gap-1">
+                            <svg class="w-5 h-5 text-indigo-500 transition-transform duration-300 transform hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-lg font-bold text-indigo-600 bot-email"></h3>
+                        </div>
+                        <p class="bot-status text-sm" data-status="running"></p>
+                    </div>
+                    <p class="text-sm text-gray-600 bot-country"></p>
+                    <p class="text-sm text-gray-600 bot-start-time"></p>
                 </div>
                 <div class="space-x-2">
                     <button class="stop-bot bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
