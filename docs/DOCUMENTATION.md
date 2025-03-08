@@ -12,6 +12,7 @@ graph TD
     D <--> E[US Visa API]
     B <--> F[File Storage]
     C <--> G[Real-time Updates]
+    B --> H[Email Notifications]
     
     subgraph Frontend
     A
@@ -27,6 +28,7 @@ graph TD
     
     subgraph External
     E
+    H
     end
 ```
 
@@ -43,6 +45,7 @@ graph TD
 - Socket.IO for real-time communication
 - PythonShell for Python process management
 - File-based storage for bot configurations
+- Email notification system via SMTP
 
 ### 3. Python Bot
 ```mermaid
@@ -52,6 +55,7 @@ sequenceDiagram
     participant NodeServer
     participant PythonBot
     participant USVISA System
+    participant EmailService
     
     User->>WebUI: Configure bot
     WebUI->>NodeServer: Start bot request
@@ -66,6 +70,7 @@ sequenceDiagram
         alt Better date found
             PythonBot->>USVISA System: Book appointment
             PythonBot->>NodeServer: Success notification
+            NodeServer->>EmailService: Send email notification
             NodeServer->>WebUI: Update UI
         end
     end
@@ -108,6 +113,13 @@ sequenceDiagram
    - Intelligent date comparison
    - Support for multiple facilities
 
+6. **Email Notifications**
+   - Automatic email alerts when appointments are booked
+   - Secure credential management via environment variables
+   - Gmail SMTP integration with app password support
+   - Detailed HTML email with appointment information
+   - Configurable recipient address
+
 ## Configuration Options
 
 | Parameter | Description | Required |
@@ -119,6 +131,16 @@ sequenceDiagram
 | FACILITY_ID | Visa facility ID | No |
 | ASC_FACILITY_ID | ASC facility ID | No |
 | MIN_DATE | Minimum acceptable date | No |
+
+## Environment Variables
+
+The application uses environment variables for sensitive configuration:
+
+| Variable | Description | Required for Email |
+|----------|-------------|-------------------|
+| SENDER_EMAIL | Gmail address to send notifications from | Yes |
+| SENDER_PASSWORD | Gmail app password (not regular password) | Yes |
+| NOTIFICATION_EMAIL | Email address to receive notifications | Yes |
 
 ## Supported Countries
 
@@ -136,16 +158,37 @@ The bot supports scheduling in multiple countries including:
 flowchart LR
     A[Clone Repository] --> B[Install Dependencies]
     B --> C[Run setup.sh]
-    C --> D[Start Node.js Server]
-    D --> E[Access Web UI]
+    C --> D[Configure .env file]
+    D --> E[Start Node.js Server]
+    E --> F[Access Web UI]
 ```
 
 ### 2. Docker Deployment
 ```mermaid
 flowchart LR
-    A[Clone Repository] --> B[Build Docker Image]
-    B --> C[Run Docker Container]
-    C --> D[Access Web UI]
+    A[Clone Repository] --> B[Configure .env file]
+    B --> C[Build Docker Image]
+    C --> D[Run Docker Container]
+    D --> E[Access Web UI]
+```
+
+## Email Notification System
+
+```mermaid
+sequenceDiagram
+    participant Bot as Bot Process
+    participant Server as Node.js Server
+    participant Email as Email Service
+    participant Gmail as Gmail SMTP
+    participant User as User's Inbox
+    
+    Bot->>Server: Appointment booked notification
+    Server->>Email: Send notification request
+    Email->>Email: Create HTML email template
+    Email->>Gmail: Send via SMTP
+    Gmail->>User: Deliver email notification
+    Email->>Server: Notification status
+    Server->>Bot: Log notification result
 ```
 
 ## Error Handling
@@ -157,10 +200,12 @@ flowchart TD
     B -->|Auth| D[Re-login]
     B -->|Schedule| E[Reset schedule ID]
     B -->|Python| F[Show user-friendly error]
-    C --> G[Continue]
-    D --> G
-    E --> G
-    F --> H[Suggest fix]
+    B -->|Email| G[Log failure, continue bot]
+    C --> H[Continue]
+    D --> H
+    E --> H
+    F --> I[Suggest fix]
+    G --> H
 ```
 
 ## Best Practices
@@ -172,6 +217,7 @@ flowchart TD
 
 2. **Security**
    - No hardcoded credentials
+   - Environment variables for sensitive data
    - Secure session management
    - HTTPS communication
 
@@ -180,6 +226,7 @@ flowchart TD
    - Emoji indicators for visual scanning
    - Automatic cleanup of repetitive logs
    - Clear error messages with suggested fixes
+   - Email notifications for important events
 
 4. **Resource Management**
    - Efficient memory usage
