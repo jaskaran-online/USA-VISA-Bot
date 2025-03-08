@@ -137,7 +137,11 @@ app.post('/api/bot/start', (req, res) => {
     status: 'stopped',
     startTime: new Date().toISOString(),
     logs: [
-      { message: 'Bot created. Click "Restart" to start the bot.', type: 'info', timestamp: new Date().toISOString() }
+      { 
+        message: formatLogMessage('Bot created. Click "Restart" to start the bot.'), 
+        type: 'info', 
+        timestamp: new Date().toISOString() 
+      }
     ]
   };
   
@@ -169,7 +173,11 @@ app.post('/api/bot/stop/:id', (req, res) => {
     }
     
     bot.status = 'stopped';
-    const logEntry = { message: 'Bot stopped by user', type: 'info', timestamp: new Date().toISOString() };
+    const logEntry = { 
+      message: formatLogMessage('Bot stopped by user'), 
+      type: 'info', 
+      timestamp: new Date().toISOString() 
+    };
     bot.logs.push(logEntry);
     io.emit('bot-log', { id, ...logEntry });
     
@@ -223,11 +231,45 @@ app.post('/api/bot/restart/:id', (req, res) => {
       stdoutParser: (line) => line
     });
     
-    // Add log function
+    // Add log function with deduplication
+    let lastLogMessage = '';
+    let duplicateCount = 0;
+    
     const addLog = (message, type = 'info') => {
-      const logEntry = { message, type, timestamp: new Date().toISOString() };
-      bot.logs.push(logEntry);
-      io.emit('bot-log', { id, ...logEntry });
+      // Format the message
+      const formattedMessage = formatLogMessage(message, type);
+      
+      // Check for duplicate messages
+      if (formattedMessage === lastLogMessage) {
+        duplicateCount++;
+        
+        // Only log every 5th duplicate message
+        if (duplicateCount % 5 !== 0) {
+          return;
+        }
+        
+        // Add count to message
+        const countMessage = `${formattedMessage} (repeated ${duplicateCount} times)`;
+        const logEntry = { message: countMessage, type, timestamp: new Date().toISOString() };
+        bot.logs.push(logEntry);
+        io.emit('bot-log', { id, ...logEntry });
+      } else {
+        // Reset duplicate counter for new message
+        if (duplicateCount > 1) {
+          // Add final count for previous message
+          const countMessage = `${lastLogMessage} (repeated ${duplicateCount} times)`;
+          const logEntry = { message: countMessage, type, timestamp: new Date().toISOString() };
+          bot.logs.push(logEntry);
+          io.emit('bot-log', { id, ...logEntry });
+        }
+        
+        // Log new message
+        duplicateCount = 1;
+        lastLogMessage = formattedMessage;
+        const logEntry = { message: formattedMessage, type, timestamp: new Date().toISOString() };
+        bot.logs.push(logEntry);
+        io.emit('bot-log', { id, ...logEntry });
+      }
     };
     
     // Set up event handlers
@@ -281,6 +323,64 @@ app.get('/api/bots', (req, res) => {
   res.json(bots);
 });
 
+// Format log message with emoji
+function formatLogMessage(message, type = 'info') {
+  // Add emoji based on message type
+  let emoji = '';
+  if (type === 'error') {
+    emoji = '❌ ';
+  } else if (message.includes('Wait')) {
+    emoji = '⏳ ';
+  } else if (message.includes('Get sign in')) {
+    emoji = '🔑 ';
+  } else if (message.includes('Post sing in') || message.includes('Post sign in')) {
+    emoji = '🔐 ';
+  } else if (message.includes('Get current appointment')) {
+    emoji = '📅 ';
+  } else if (message.includes('Current appointment date')) {
+    emoji = '📆 ';
+  } else if (message.includes('Init csrf')) {
+    emoji = '🔒 ';
+  } else if (message.includes('Get new appointment')) {
+    emoji = '🔍 ';
+  } else if (message.includes('cleared')) {
+    emoji = '🧹 ';
+  } else if (message.includes('stopped')) {
+    emoji = '🛑 ';
+  } else if (message.includes('started')) {
+    emoji = '▶️ ';
+  } else if (message.includes('finished') || message.includes('completed')) {
+    emoji = '✅ ';
+  } else {
+    emoji = 'ℹ️ ';
+  }
+  
+  // Clean up message
+  let cleanMessage = message;
+  
+  // Remove timestamps from error messages
+  if (cleanMessage.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}/)) {
+    cleanMessage = cleanMessage.replace(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}\s+/, '');
+  }
+  
+  // Format HTTP requests to be more readable
+  if (cleanMessage.includes('HTTP/1.1')) {
+    cleanMessage = cleanMessage.replace(/https:\/\/ais\.usvisa-info\.com:\d+\s+"([A-Z]+)\s+([^"]+)\s+HTTP\/1\.1"\s+(\d+).*/, 'Request: $1 $2 (Status: $3)');
+  }
+  
+  // Format appointment date message
+  if (cleanMessage.includes('Current appointment date and time:')) {
+    cleanMessage = cleanMessage.replace('Current appointment date and time:', 'Current appointment:');
+  }
+  
+  // Format wait message
+  if (cleanMessage === 'Wait') {
+    cleanMessage = 'Waiting for available slots...';
+  }
+  
+  return emoji + cleanMessage;
+}
+
 // Add API endpoint to clear logs
 app.post('/api/bot/clear-logs/:id', (req, res) => {
   const { id } = req.params;
@@ -293,7 +393,11 @@ app.post('/api/bot/clear-logs/:id', (req, res) => {
   try {
     // Clear logs but add a message indicating they were cleared
     bot.logs = [
-      { message: 'Logs cleared by user', type: 'info', timestamp: new Date().toISOString() }
+      { 
+        message: formatLogMessage('Logs cleared by user'), 
+        type: 'info', 
+        timestamp: new Date().toISOString() 
+      }
     ];
     
     // Save to file
@@ -316,7 +420,11 @@ function setupAutoLogCleaning() {
         // Keep only the last 100 logs
         const lastLogs = bot.logs.slice(-100);
         bot.logs = [
-          { message: `Auto-cleared ${bot.logs.length - 100} older log entries`, type: 'info', timestamp: new Date().toISOString() },
+          { 
+            message: formatLogMessage(`Auto-cleared ${bot.logs.length - 100} older log entries`), 
+            type: 'info', 
+            timestamp: new Date().toISOString() 
+          },
           ...lastLogs
         ];
         
