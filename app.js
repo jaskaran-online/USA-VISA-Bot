@@ -106,9 +106,12 @@ function saveBotsToFile() {
   try {
     const botsToSave = {};
     for (const [id, bot] of activeBots.entries()) {
-      // Don't save pyshell instance
-      const { pyshell, ...botData } = bot;
-      botsToSave[id] = botData;
+      // Don't save pyshell instance and don't save logs
+      const { pyshell, logs, ...botData } = bot;
+      botsToSave[id] = {
+        ...botData,
+        logs: [] // Store empty logs array to save space
+      };
     }
     fs.writeFileSync(BOTS_FILE, JSON.stringify(botsToSave, null, 2));
   } catch (error) {
@@ -136,17 +139,19 @@ app.post('/api/bot/start', (req, res) => {
     config,
     status: 'stopped',
     startTime: new Date().toISOString(),
-    logs: [
-      { 
-        message: formatLogMessage('Bot created. Click "Restart" to start the bot.'), 
-        type: 'info', 
-        timestamp: new Date().toISOString() 
-      }
-    ]
+    logs: [] // Empty logs array
   };
   
   // Save bot data
   activeBots.set(configId, botData);
+  
+  // Emit initial log message to client
+  io.emit('bot-log', { 
+    id: configId, 
+    message: formatLogMessage('Bot created. Click "Restart" to start the bot.'), 
+    type: 'info', 
+    timestamp: new Date().toISOString() 
+  });
   
   // Save to file
   saveBotsToFile();
@@ -173,13 +178,14 @@ app.post('/api/bot/stop/:id', (req, res) => {
     }
     
     bot.status = 'stopped';
-    const logEntry = { 
+    
+    // Only emit to client, don't store in bot object
+    io.emit('bot-log', { 
+      id, 
       message: formatLogMessage('Bot stopped by user'), 
       type: 'info', 
       timestamp: new Date().toISOString() 
-    };
-    bot.logs.push(logEntry);
-    io.emit('bot-log', { id, ...logEntry });
+    });
     
     // Keep bot data but remove pyshell
     bot.pyshell = undefined;
@@ -250,25 +256,37 @@ app.post('/api/bot/restart/:id', (req, res) => {
         
         // Add count to message
         const countMessage = `${formattedMessage} (repeated ${duplicateCount} times)`;
-        const logEntry = { message: countMessage, type, timestamp: new Date().toISOString() };
-        bot.logs.push(logEntry);
-        io.emit('bot-log', { id, ...logEntry });
+        // Only emit to client, don't store in bot object
+        io.emit('bot-log', { 
+          id, 
+          message: countMessage, 
+          type, 
+          timestamp: new Date().toISOString() 
+        });
       } else {
         // Reset duplicate counter for new message
         if (duplicateCount > 1) {
           // Add final count for previous message
           const countMessage = `${lastLogMessage} (repeated ${duplicateCount} times)`;
-          const logEntry = { message: countMessage, type, timestamp: new Date().toISOString() };
-          bot.logs.push(logEntry);
-          io.emit('bot-log', { id, ...logEntry });
+          // Only emit to client, don't store in bot object
+          io.emit('bot-log', { 
+            id, 
+            message: countMessage, 
+            type, 
+            timestamp: new Date().toISOString() 
+          });
         }
         
         // Log new message
         duplicateCount = 1;
         lastLogMessage = formattedMessage;
-        const logEntry = { message: formattedMessage, type, timestamp: new Date().toISOString() };
-        bot.logs.push(logEntry);
-        io.emit('bot-log', { id, ...logEntry });
+        // Only emit to client, don't store in bot object
+        io.emit('bot-log', { 
+          id, 
+          message: formattedMessage, 
+          type, 
+          timestamp: new Date().toISOString() 
+        });
       }
     };
     
@@ -300,6 +318,12 @@ app.post('/api/bot/restart/:id', (req, res) => {
     bot.pyshell = pyshell;
     bot.status = 'running';
     
+    // Initialize empty logs array if it doesn't exist
+    if (!bot.logs) {
+      bot.logs = [];
+    }
+    
+    // Send initial message
     addLog('Bot started');
     
     // Save to file
@@ -391,17 +415,16 @@ app.post('/api/bot/clear-logs/:id', (req, res) => {
   }
   
   try {
-    // Clear logs but add a message indicating they were cleared
-    bot.logs = [
-      { 
-        message: formatLogMessage('Logs cleared by user'), 
-        type: 'info', 
-        timestamp: new Date().toISOString() 
-      }
-    ];
+    // Just emit a clear logs event to the client
+    io.emit('bot-logs-cleared', { id });
     
-    // Save to file
-    saveBotsToFile();
+    // Emit a message that logs were cleared
+    io.emit('bot-log', { 
+      id, 
+      message: formatLogMessage('Logs cleared by user'), 
+      type: 'info', 
+      timestamp: new Date().toISOString() 
+    });
     
     res.json({ success: true });
   } catch (error) {
