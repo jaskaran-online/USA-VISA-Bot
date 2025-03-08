@@ -59,6 +59,25 @@ JSON_HEADERS = {
 }
 X_CSRF_TOKEN_HEADER = "X-CSRF-Token"
 COOKIE_HEADER = "Cookie"
+FACILITIES = {
+    "89": "Calgary",
+    "90": "Halifax",
+    "9": "Montreal (Closed)",
+    "92": "Ottawa",
+    "93": "Quebec City",
+    "94": "Toronto",
+    "95": "Vancouver"
+}
+
+ASC_FACILITIES = {
+    "89": "Calgary ASC",
+    "90": "Halifax ASC",
+    "92": "Ottawa ASC",
+    "93": "Quebec City ASC",
+    "94": "Toronto ASC",
+    "95": "Vancouver ASC"
+}
+
 COUNTRIES = {
     "ar": "Argentina",
     "ec": "Ecuador",
@@ -225,8 +244,16 @@ class Config:
         self.schedule_id: Optional[str] = config_data.get("SCHEDULE_ID")
 
         if self.schedule_id:
-            self.facility_id: Optional[str] = config_data.get("FACILITY_ID")
-            self.asc_facility_id: Optional[str] = config_data.get("ASC_FACILITY_ID")
+            facility_id = config_data.get("FACILITY_ID")
+            if facility_id and facility_id not in FACILITIES:
+                print(f"Warning: Invalid facility ID {facility_id}, will auto-select from available facilities")
+                facility_id = None
+            self.facility_id: Optional[str] = facility_id
+            asc_facility_id = config_data.get("ASC_FACILITY_ID")
+            if asc_facility_id and asc_facility_id not in ASC_FACILITIES:
+                print(f"Warning: Invalid ASC facility ID {asc_facility_id}, will auto-select from available facilities")
+                asc_facility_id = None
+            self.asc_facility_id: Optional[str] = asc_facility_id
         else:
             self.facility_id = None
             self.asc_facility_id = None
@@ -234,15 +261,25 @@ class Config:
         self.__save()
 
     def set_facility_id(self, locations: dict[str, str]):
-        # Always select the first available facility
+        # Use pre-configured facility if valid
+        if self.facility_id and self.facility_id in FACILITIES:
+            print(f"Using configured facility: {self.facility_id} - {FACILITIES[self.facility_id]}")
+            return
+
+        # Otherwise auto-select first available
         self.facility_id = next(iter(locations))
         print(f"Auto-selected consul facility: {self.facility_id} - {locations[self.facility_id]}")
         self.__save()
 
     def set_asc_facility_id(self, locations: dict[str, str]):
-        # Always select the first available ASC facility
+        # Use pre-configured ASC facility if valid
+        if self.asc_facility_id and self.asc_facility_id in ASC_FACILITIES:
+            print(f"Using configured ASC facility: {self.asc_facility_id} - {ASC_FACILITIES[self.asc_facility_id]}")
+            return
+
+        # Otherwise auto-select first available
         self.asc_facility_id = next(iter(locations))
-        print(f"Auto-selected ASC facility: {self.asc_facility_id} - {locations[self.asc_facility_id]}")
+        print(f"Auto-selected ASC facility: {self.asc_facility_id} - {ASC_FACILITIES.get(self.asc_facility_id, locations[self.asc_facility_id])}")
         self.__save()
 
     def set_schedule_id(self, schedule_ids: dict[str, Appointment]):
@@ -462,11 +499,21 @@ class Bot:
 
     def get_available_facility_id(self) -> dict[str, str]:
         self.logger("Get facility id list")
-        return self.get_available_locations("appointments_consulate_appointment_facility_id")
+        locations = self.get_available_locations("appointments_consulate_appointment_facility_id")
+        # Filter to only known facilities
+        facilities = {id: name for id, name in locations.items() if id in FACILITIES}
+        if facilities:
+            return facilities
+        return locations
 
     def get_available_asc_facility_id(self) -> dict[str, str]:
         self.logger("Get asc facility id list")
-        return self.get_available_locations("appointments_asc_appointment_facility_id")
+        locations = self.get_available_locations("appointments_asc_appointment_facility_id")
+        # Filter to only known ASC facilities
+        facilities = {id: name for id, name in locations.items() if id in ASC_FACILITIES}
+        if facilities:
+            return facilities
+        return locations
 
     def load_change_appointment_page(self) -> Response:
         self.logger("Get new appointment")

@@ -94,12 +94,29 @@
                     <input type="text" name="SCHEDULE_ID" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Facility ID (Optional)</label>
-                    <input type="text" name="FACILITY_ID" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-gray-700">Facility</label>
+                    <select name="FACILITY_ID" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Select a facility</option>
+                        <option value="89">Calgary (89)</option>
+                        <option value="90">Halifax (90)</option>
+                        <option value="9" disabled>Montreal (9) - Closed</option>
+                        <option value="92">Ottawa (92)</option>
+                        <option value="93">Quebec City (93)</option>
+                        <option value="94">Toronto (94)</option>
+                        <option value="95">Vancouver (95)</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">ASC Facility ID (Optional)</label>
-                    <input type="text" name="ASC_FACILITY_ID" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <label class="block text-sm font-medium text-gray-700">ASC Facility</label>
+                    <select name="ASC_FACILITY_ID" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Select an ASC facility</option>
+                        <option value="89">Calgary ASC (89)</option>
+                        <option value="90">Halifax ASC (90)</option>
+                        <option value="92">Ottawa ASC (92)</option>
+                        <option value="93">Quebec City ASC (93)</option>
+                        <option value="94">Toronto ASC (94)</option>
+                        <option value="95">Vancouver ASC (95)</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Min Date (Optional)</label>
