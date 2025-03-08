@@ -1,0 +1,9 @@
+node_modules
+venv
+.git
+.gitignore
+active_bots.json
+log.txt
+config_*
+*.md
+LICENSE 
