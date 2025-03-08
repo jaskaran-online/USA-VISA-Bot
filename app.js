@@ -15,6 +15,11 @@ app.use(express.json());
 const activeBots = new Map();
 const BOTS_FILE = path.join(__dirname, 'active_bots.json');
 
+// Determine Python path based on environment
+const pythonPath = process.platform === 'win32' 
+  ? path.join(__dirname, 'venv', 'Scripts', 'python.exe')
+  : path.join(__dirname, 'venv', 'bin', 'python');
+
 // Load saved bots on startup
 try {
   if (fs.existsSync(BOTS_FILE)) {
@@ -32,7 +37,7 @@ try {
         args: [configPath],
         mode: 'text',
         pythonOptions: ['-u'],
-        pythonPath: 'python3',
+        pythonPath: pythonPath,
         stderrParser: (line) => line,
         stdoutParser: (line) => line
       });
@@ -133,7 +138,7 @@ app.post('/api/bot/start', (req, res) => {
     args: [configPath],
     mode: 'text',
     pythonOptions: ['-u'],
-    pythonPath: 'python3',
+    pythonPath: pythonPath,
     stderrParser: (line) => line,
     stdoutParser: (line) => line
   });
@@ -213,7 +218,7 @@ app.post('/api/bot/restart/:id', (req, res) => {
     args: [configPath],
     mode: 'text',
     pythonOptions: ['-u'],
-    pythonPath: 'python3',
+    pythonPath: pythonPath,
     stderrParser: (line) => line,
     stdoutParser: (line) => line
   });
