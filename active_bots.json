@@ -390,6 +390,46 @@
         "message": "Process exited with code undefined",
         "type": "error",
         "timestamp": "2025-03-08T13:16:22.778Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:18:35.605Z"
+      },
+      {
+        "message": "2025-03-08 18:48:35,604  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:35.612Z"
+      },
+      {
+        "message": "2025-03-08 18:48:35,609  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:35.612Z"
+      },
+      {
+        "message": "2025-03-08 18:48:37,087  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:37.089Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T13:18:37.092Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:18:37.094Z"
+      },
+      {
+        "message": "2025-03-08 18:48:37,090  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:37.095Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:37.097Z"
       }
     ],
     "status": "stopped"
@@ -785,6 +825,31 @@
         "message": "Process exited with code undefined",
         "type": "error",
         "timestamp": "2025-03-08T13:16:22.779Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:18:35.612Z"
+      },
+      {
+        "message": "2025-03-08 18:48:35,604  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:35.612Z"
+      },
+      {
+        "message": "2025-03-08 18:48:35,609  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:35.613Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T13:18:37.096Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T13:18:37.101Z"
       }
     ],
     "status": "stopped"

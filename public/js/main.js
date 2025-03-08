@@ -88,8 +88,69 @@ document.getElementById('activeBots').addEventListener('click', async (e) => {
     const botInstance = e.target.closest('.bot-instance');
     if (!botInstance) return;
 
+    // Handle stop/restart button clicks
+    const stopButton = e.target.closest('.stop-bot');
+    const restartButton = e.target.closest('.restart-bot');
+    
+    if (stopButton || restartButton) {
+        const botId = botInstance.dataset.botId;
+        const action = stopButton ? 'stop' : 'restart';
+        const button = stopButton || restartButton;
+        
+        // Disable button during action
+        button.disabled = true;
+        button.innerHTML = action === 'stop' 
+            ? '<i class="fas fa-spinner fa-spin"></i> Stopping...' 
+            : '<i class="fas fa-spinner fa-spin"></i> Restarting...';
+        
+        try {
+            const response = await fetch(`/api/bot/${action}/${botId}`, {
+                method: 'POST'
+            });
+            
+            if (!response.ok) throw new Error(`Failed to ${action} bot`);
+            
+            if (action === 'stop') {
+                const bots = botStore.get();
+                if (bots[botId]) {
+                    bots[botId].status = 'stopped';
+                    botStore.set(bots);
+                    updateBotUI(botId, bots[botId]);
+                    
+                    // Show restart button, hide stop button
+                    botInstance.querySelector('.stop-bot').style.display = 'none';
+                    botInstance.querySelector('.restart-bot').style.display = 'inline-flex';
+                }
+            } else if (action === 'restart') {
+                const bots = botStore.get();
+                if (bots[botId]) {
+                    bots[botId].status = 'running';
+                    botStore.set(bots);
+                    updateBotUI(botId, bots[botId]);
+                    
+                    // Show stop button, hide restart button
+                    botInstance.querySelector('.stop-bot').style.display = 'inline-flex';
+                    botInstance.querySelector('.restart-bot').style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error(`Error ${action}ing bot:`, error);
+            alert(`Failed to ${action} bot. Please try again.`);
+        } finally {
+            // Re-enable button
+            button.disabled = false;
+            button.innerHTML = action === 'stop' 
+                ? '<i class="fas fa-stop"></i> Stop' 
+                : '<i class="fas fa-play"></i> Restart';
+        }
+        return;
+    }
+
     // Handle bot selection
     if (e.target === botInstance || e.target.closest('.bot-header')) {
+        // Don't select if clicking on buttons
+        if (e.target.closest('button')) return;
+        
         document.querySelectorAll('.bot-instance').forEach(bot => bot.classList.remove('selected'));
         botInstance.classList.add('selected');
         // Show logs for selected bot
@@ -115,34 +176,6 @@ document.getElementById('activeBots').addEventListener('click', async (e) => {
                 logsDiv.appendChild(logDiv);
             });
             logsDiv.scrollTop = logsDiv.scrollHeight;
-        }
-        return;
-    }
-
-    // Handle bot actions
-    if (e.target.classList.contains('stop-bot') || e.target.classList.contains('restart-bot')) {
-        const botInstance = e.target.closest('.bot-instance');
-        const botId = botInstance.dataset.botId;
-        const action = e.target.classList.contains('stop-bot') ? 'stop' : 'restart';
-        
-        try {
-            const response = await fetch(`/api/bot/${action}/${botId}`, {
-                method: 'POST'
-            });
-            
-            if (!response.ok) throw new Error(`Failed to ${action} bot`);
-            
-            if (action === 'stop') {
-                const bots = botStore.get();
-                if (bots[botId]) {
-                    bots[botId].status = 'stopped';
-                    botStore.set(bots);
-                    updateBotUI(botId, bots[botId]);
-                }
-            }
-        } catch (error) {
-            console.error(`Error ${action}ing bot:`, error);
-            alert(`Failed to ${action} bot. Please try again.`);
         }
     }
 });
@@ -204,66 +237,44 @@ function updateBotUI(id, bot) {
     if (!div) return;
     
     // Update email
-    div.querySelector('.bot-email').textContent = `Bot ${id} - ${bot.config.EMAIL || 'No email'}`;
-    // Add country with globe icon
+    div.querySelector('.bot-email').textContent = bot.config.EMAIL || 'No email';
+    
+    // Update country
     const countryEl = div.querySelector('.bot-country');
-    countryEl.innerHTML = `
-        <svg class="inline w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        ${COUNTRIES[bot.config.COUNTRY]}
-    `;
-    // Add start time with clock icon
+    countryEl.textContent = COUNTRIES[bot.config.COUNTRY] || bot.config.COUNTRY || 'Unknown';
+    
+    // Update facility
+    const facilityEl = div.querySelector('.bot-facility');
+    facilityEl.textContent = `Facility: ${bot.config.FACILITY_ID || 'Not specified'}`;
+    
+    // Update start time
     const startTimeEl = div.querySelector('.bot-start-time');
-    startTimeEl.innerHTML = `
-        <svg class="inline w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        Started: ${new Date(bot.startTime).toLocaleString()}
-    `;
+    startTimeEl.textContent = new Date(bot.startTime).toLocaleString();
+    
+    // Update status
     const status = bot.status || 'running';
     const statusEl = div.querySelector('.bot-status');
-    const statusText = {
-        'running': `Active <span class="inline-block animate-pulse">●</span>`,
-        'stopped': 'Stopped',
-        'error': 'Error',
-        'completed': 'Done'
-    }[status] || status.charAt(0).toUpperCase() + status.slice(1);
-    statusEl.innerHTML = statusText;
     statusEl.dataset.status = status;
     
+    const statusText = {
+        'running': 'Running',
+        'stopped': 'Stopped',
+        'error': 'Error',
+        'completed': 'Completed'
+    };
+    
+    statusEl.textContent = statusText[status] || status;
+    
+    // Show/hide buttons based on status
     const stopBtn = div.querySelector('.stop-bot');
     const restartBtn = div.querySelector('.restart-bot');
     
-    if (status === 'stopped' || status === 'error' || status === 'completed') {
-        stopBtn.style.display = 'none';
-        restartBtn.style.display = 'inline-block';
-    } else {
-        stopBtn.style.display = 'inline-block';
+    if (status === 'running') {
+        stopBtn.style.display = 'inline-flex';
         restartBtn.style.display = 'none';
-    }
-    
-    // Only update logs if this is the selected bot
-    if (div.classList.contains('selected')) {
-        const logsDiv = div.querySelector('.bot-logs');
-        logsDiv.innerHTML = '';
-        bot.logs?.forEach(log => {
-            const logDiv = document.createElement('div');
-            logDiv.className = `log-entry ${log.type || 'info'}`;
-            
-            const timeSpan = document.createElement('span');
-            timeSpan.className = 'log-time';
-            timeSpan.textContent = new Date(log.timestamp || bot.startTime).toLocaleTimeString();
-            
-            const messageSpan = document.createElement('span');
-            messageSpan.className = 'log-message';
-            messageSpan.textContent = typeof log === 'string' ? log : log.message;
-            
-            logDiv.appendChild(timeSpan);
-            logDiv.appendChild(messageSpan);
-            logsDiv.appendChild(logDiv);
-        });
-        logsDiv.scrollTop = logsDiv.scrollHeight;
+    } else {
+        stopBtn.style.display = 'none';
+        restartBtn.style.display = 'inline-flex';
     }
 }
 
