@@ -430,9 +430,269 @@
         "message": "Process exited with code undefined",
         "type": "error",
         "timestamp": "2025-03-08T13:18:37.097Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:31.607Z"
+      },
+      {
+        "message": "2025-03-08 18:51:31,606  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:31.613Z"
+      },
+      {
+        "message": "2025-03-08 18:51:31,612  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:31.613Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,254  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.255Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,256  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.258Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:33.259Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,641  https://ais.usvisa-info.com:443 \"POST /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.641Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,642  Get current appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.642Z"
+      },
+      {
+        "message": "Get current appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:33.642Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,930  https://ais.usvisa-info.com:443 \"GET /en-ca/niv HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.932Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,210  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/account HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.211Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,579  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/groups/44769938 HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.580Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:408: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.597Z"
+      },
+      {
+        "message": "  applications = BeautifulSoup(response.text, HTML_PARSER).findAll(\"div\", {\"class\": \"application\"})",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.598Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:422: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.598Z"
+      },
+      {
+        "message": "  description = ' '.join([x.get_text() for x in application.findAll(\"td\")][0:4])",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.598Z"
+      },
+      {
+        "message": "Init csrf",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:34.601Z"
+      },
+      {
+        "message": "Get new appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:34.602Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,601  Init csrf",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.602Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,601  Get new appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.602Z"
+      },
+      {
+        "message": "2025-03-08 18:51:35,065  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:35.066Z"
+      },
+      {
+        "message": "Current appointment date and time: 08:45 2025-12-15",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:35.082Z"
+      },
+      {
+        "message": "2025-03-08 18:51:35,082  Current appointment date and time: 08:45 2025-12-15",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:35.083Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:38.436Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:38.442Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:45.769Z"
+      },
+      {
+        "message": "Bot started",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:54.162Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:54.322Z"
+      },
+      {
+        "message": "2025-03-08 18:51:54,322  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:54.322Z"
+      },
+      {
+        "message": "2025-03-08 18:51:54,325  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:54.325Z"
+      },
+      {
+        "message": "2025-03-08 18:51:55,786  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:55.787Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:55.788Z"
+      },
+      {
+        "message": "2025-03-08 18:51:55,788  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:55.788Z"
+      },
+      {
+        "message": "2025-03-08 18:51:56,213  https://ais.usvisa-info.com:443 \"POST /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:56.214Z"
+      },
+      {
+        "message": "Get current appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:56.215Z"
+      },
+      {
+        "message": "2025-03-08 18:51:56,215  Get current appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:56.216Z"
+      },
+      {
+        "message": "2025-03-08 18:51:56,574  https://ais.usvisa-info.com:443 \"GET /en-ca/niv HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:56.575Z"
+      },
+      {
+        "message": "2025-03-08 18:51:56,878  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/account HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:56.878Z"
+      },
+      {
+        "message": "2025-03-08 18:51:57,289  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/groups/44769938 HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.289Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:408: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.299Z"
+      },
+      {
+        "message": "  applications = BeautifulSoup(response.text, HTML_PARSER).findAll(\"div\", {\"class\": \"application\"})",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.300Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:422: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.300Z"
+      },
+      {
+        "message": "  description = ' '.join([x.get_text() for x in application.findAll(\"td\")][0:4])",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.300Z"
+      },
+      {
+        "message": "Init csrf",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:57.301Z"
+      },
+      {
+        "message": "Get new appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:57.301Z"
+      },
+      {
+        "message": "2025-03-08 18:51:57,301  Init csrf",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.301Z"
+      },
+      {
+        "message": "2025-03-08 18:51:57,301  Get new appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.301Z"
+      },
+      {
+        "message": "2025-03-08 18:51:57,736  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.737Z"
+      },
+      {
+        "message": "Current appointment date and time: 08:45 2025-12-15",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:57.748Z"
+      },
+      {
+        "message": "2025-03-08 18:51:57,748  Current appointment date and time: 08:45 2025-12-15",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:57.749Z"
+      },
+      {
+        "message": "Wait",
+        "type": "info",
+        "timestamp": "2025-03-08T13:22:00.756Z"
+      },
+      {
+        "message": "2025-03-08 18:52:00,755  Wait",
+        "type": "error",
+        "timestamp": "2025-03-08T13:22:00.756Z"
       }
     ],
-    "status": "stopped"
+    "status": "running"
   },
   "1741438138498": {
     "config": {
@@ -850,8 +1110,133 @@
         "message": "Process exited with code undefined",
         "type": "error",
         "timestamp": "2025-03-08T13:18:37.101Z"
+      },
+      {
+        "message": "Get sign in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:31.613Z"
+      },
+      {
+        "message": "2025-03-08 18:51:31,606  Get sign in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:31.613Z"
+      },
+      {
+        "message": "2025-03-08 18:51:31,612  Starting new HTTPS connection (1): ais.usvisa-info.com:443",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:31.613Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,270  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.271Z"
+      },
+      {
+        "message": "Post sing in",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:33.271Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,271  Post sing in",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.272Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,650  https://ais.usvisa-info.com:443 \"POST /en-ca/niv/users/sign_in HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.650Z"
+      },
+      {
+        "message": "Get current appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:33.651Z"
+      },
+      {
+        "message": "2025-03-08 18:51:33,650  Get current appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:33.651Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,000  https://ais.usvisa-info.com:443 \"GET /en-ca/niv HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.000Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,296  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/account HTTP/1.1\" 302 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.297Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,653  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/groups/44769938 HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.653Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:408: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.662Z"
+      },
+      {
+        "message": "  applications = BeautifulSoup(response.text, HTML_PARSER).findAll(\"div\", {\"class\": \"application\"})",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.663Z"
+      },
+      {
+        "message": "/Users/jaskaransingh/Desktop/projects/USA-VISA-Bot/main.py:422: DeprecationWarning: Call to deprecated method findAll. (Replaced by find_all) -- Deprecated since version 4.0.0.",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.663Z"
+      },
+      {
+        "message": "  description = ' '.join([x.get_text() for x in application.findAll(\"td\")][0:4])",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.663Z"
+      },
+      {
+        "message": "Init csrf",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:34.665Z"
+      },
+      {
+        "message": "Get new appointment",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:34.665Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,665  Init csrf",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.665Z"
+      },
+      {
+        "message": "2025-03-08 18:51:34,665  Get new appointment",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:34.665Z"
+      },
+      {
+        "message": "2025-03-08 18:51:35,072  https://ais.usvisa-info.com:443 \"GET /en-ca/niv/schedule/62971969/appointment HTTP/1.1\" 200 None",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:35.072Z"
+      },
+      {
+        "message": "Current appointment date and time: 08:45 2025-12-15",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:35.086Z"
+      },
+      {
+        "message": "2025-03-08 18:51:35,085  Current appointment date and time: 08:45 2025-12-15",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:35.086Z"
+      },
+      {
+        "message": "Bot stopped by user",
+        "type": "info",
+        "timestamp": "2025-03-08T13:21:38.441Z"
+      },
+      {
+        "message": "Process exited with code undefined",
+        "type": "error",
+        "timestamp": "2025-03-08T13:21:38.443Z"
       }
     ],
-    "status": "stopped"
+    "status": "error"
   }
 }

@@ -227,8 +227,39 @@ function addBotToUI(bot) {
     // Set email in bot header
     div.querySelector('.bot-email').textContent = bot.config.EMAIL || 'No email';
     
+    // Update UI with bot data
     updateBotUI(bot.id, bot);
+    
+    // Show logs
+    const logsDiv = div.querySelector('.bot-logs');
+    logsDiv.style.display = 'block';
+    div.querySelector('.toggle-logs i').classList.replace('fa-chevron-down', 'fa-chevron-up');
+    
+    // Add logs
+    if (bot.logs && bot.logs.length > 0) {
+        bot.logs.forEach(log => {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${log.type || 'info'}`;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'log-time';
+            timeSpan.textContent = new Date(log.timestamp).toLocaleTimeString();
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'log-message';
+            messageSpan.textContent = typeof log === 'string' ? log : log.message;
+            
+            logDiv.appendChild(timeSpan);
+            logDiv.appendChild(messageSpan);
+            logsDiv.appendChild(logDiv);
+        });
+        logsDiv.scrollTop = logsDiv.scrollHeight;
+    }
+    
     container.appendChild(div);
+    
+    // Update counters
+    updateCounters();
 }
 
 // Update bot UI
@@ -252,7 +283,7 @@ function updateBotUI(id, bot) {
     startTimeEl.textContent = new Date(bot.startTime).toLocaleString();
     
     // Update status
-    const status = bot.status || 'running';
+    const status = bot.status || 'stopped';
     const statusEl = div.querySelector('.bot-status');
     statusEl.dataset.status = status;
     

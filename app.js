@@ -101,6 +101,21 @@ setInterval(() => {
   fs.writeFileSync(BOTS_FILE, JSON.stringify(botsData, null, 2));
 }, 5000);
 
+// Save bots to file
+function saveBotsToFile() {
+  try {
+    const botsToSave = {};
+    for (const [id, bot] of activeBots.entries()) {
+      // Don't save pyshell instance
+      const { pyshell, ...botData } = bot;
+      botsToSave[id] = botData;
+    }
+    fs.writeFileSync(BOTS_FILE, JSON.stringify(botsToSave, null, 2));
+  } catch (error) {
+    console.error('Error saving bots to file:', error);
+  }
+}
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -109,65 +124,28 @@ app.post('/api/bot/start', (req, res) => {
   const { config } = req.body;
   const configId = Date.now().toString();
   const configPath = path.join(__dirname, `config_${configId}`);
-
-  // Set defaults for MIN_DATE and NEED_ASC
-  const configWithDefaults = {
-    ...config,
-    MIN_DATE: config.MIN_DATE || new Date().toLocaleDateString('en-GB').split('/').join('.'),
-    NEED_ASC: 'false'
-  };
-
-  fs.writeFileSync(configPath, Object.entries(configWithDefaults)
+  
+  // Create config file
+  fs.writeFileSync(configPath, Object.entries(config)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n'));
-
+  
+  // Create bot data but don't start the bot automatically
   const botData = {
+    id: configId,
     config,
-    startTime: new Date(),
-    logs: [],
-    status: 'running'
+    status: 'stopped',
+    startTime: new Date().toISOString(),
+    logs: [
+      { message: 'Bot created. Click "Restart" to start the bot.', type: 'info', timestamp: new Date().toISOString() }
+    ]
   };
-
-  const addLog = (message, type = 'info') => {
-    const logEntry = { message, type, timestamp: new Date().toISOString() };
-    botData.logs.push(logEntry);
-    io.emit('bot-log', { id: configId, ...logEntry });
-  };
-
-  const pyshell = new PythonShell('main.py', {
-    args: [configPath],
-    mode: 'text',
-    pythonOptions: ['-u'],
-    pythonPath: pythonPath,
-    stderrParser: (line) => line,
-    stdoutParser: (line) => line
-  });
-
-  pyshell.on('message', (message) => {
-    console.log(`Bot ${configId}:`, message);
-    addLog(message);
-  });
-
-  pyshell.on('stderr', (message) => {
-    console.error(`Bot ${configId} error:`, message);
-    addLog(message, 'error');
-  });
-
-  pyshell.on('error', (err) => {
-    console.error(`Bot ${configId} error:`, err);
-    addLog(err.message, 'error');
-    botData.status = 'error';
-  });
-
-  pyshell.on('close', (code) => {
-    const message = code === 0 ? 'Bot finished successfully' : `Process exited with code ${code}`;
-    const type = code === 0 ? 'info' : 'error';
-    addLog(message, type);
-    botData.status = code === 0 ? 'completed' : 'error';
-  });
-
-  botData.pyshell = pyshell;
+  
+  // Save bot data
   activeBots.set(configId, botData);
+  
+  // Save to file
+  saveBotsToFile();
 
   res.json({ id: configId });
 });
@@ -176,22 +154,35 @@ app.post('/api/bot/stop/:id', (req, res) => {
   const { id } = req.params;
   const bot = activeBots.get(id);
   
-  if (bot) {
-    bot.pyshell.terminate();
+  if (!bot) {
+    return res.status(404).json({ error: 'Bot not found' });
+  }
+  
+  try {
+    // Check if pyshell exists before terminating
+    if (bot.pyshell) {
+      try {
+        bot.pyshell.terminate();
+      } catch (error) {
+        console.error(`Error terminating bot ${id}:`, error);
+      }
+    }
+    
     bot.status = 'stopped';
     const logEntry = { message: 'Bot stopped by user', type: 'info', timestamp: new Date().toISOString() };
     bot.logs.push(logEntry);
     io.emit('bot-log', { id, ...logEntry });
     
     // Keep bot data but remove pyshell
-    const { pyshell, ...botData } = bot;
-    activeBots.set(id, botData);
+    bot.pyshell = undefined;
     
-    // Clean up config file
-    fs.unlinkSync(path.join(__dirname, `config_${id}`));
+    // Save to file
+    saveBotsToFile();
+    
     res.json({ success: true });
-  } else {
-    res.status(404).json({ error: 'Bot not found' });
+  } catch (error) {
+    console.error(`Error stopping bot ${id}:`, error);
+    res.status(500).json({ error: 'Failed to stop bot' });
   }
 });
 
@@ -207,58 +198,76 @@ app.post('/api/bot/restart/:id', (req, res) => {
     return res.status(400).json({ error: 'Bot is already running' });
   }
   
-  // Create config file
-  const configPath = path.join(__dirname, `config_${id}`);
-  fs.writeFileSync(configPath, Object.entries(bot.config)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\n'));
-  
-  // Start Python shell
-  const pyshell = new PythonShell('main.py', {
-    args: [configPath],
-    mode: 'text',
-    pythonOptions: ['-u'],
-    pythonPath: pythonPath,
-    stderrParser: (line) => line,
-    stdoutParser: (line) => line
-  });
-  
-  bot.pyshell = pyshell;
-  bot.status = 'running';
-  
-  // Set up event handlers
-  pyshell.on('message', (message) => {
-    console.log(`Bot ${id}:`, message);
-    const logEntry = { message, type: 'info', timestamp: new Date().toISOString() };
-    bot.logs.push(logEntry);
-    io.emit('bot-log', { id, ...logEntry });
-  });
-  
-  pyshell.on('stderr', (message) => {
-    console.error(`Bot ${id} error:`, message);
-    const logEntry = { message, type: 'error', timestamp: new Date().toISOString() };
-    bot.logs.push(logEntry);
-    io.emit('bot-log', { id, ...logEntry });
-  });
-  
-  pyshell.on('error', (err) => {
-    console.error(`Bot ${id} error:`, err);
-    const logEntry = { message: err.message, type: 'error', timestamp: new Date().toISOString() };
-    bot.logs.push(logEntry);
-    io.emit('bot-log', { id, ...logEntry });
-    bot.status = 'error';
-  });
-  
-  pyshell.on('close', (code) => {
-    const message = code === 0 ? 'Bot finished successfully' : `Process exited with code ${code}`;
-    const type = code === 0 ? 'info' : 'error';
-    const logEntry = { message, type, timestamp: new Date().toISOString() };
-    bot.logs.push(logEntry);
-    io.emit('bot-log', { id, ...logEntry });
-    bot.status = code === 0 ? 'completed' : 'error';
-  });
-  
-  res.json({ success: true });
+  try {
+    // Create config file
+    const configPath = path.join(__dirname, `config_${id}`);
+    
+    // Set defaults for MIN_DATE and NEED_ASC if not present
+    const configWithDefaults = {
+      ...bot.config,
+      MIN_DATE: bot.config.MIN_DATE || new Date().toLocaleDateString('en-GB').split('/').join('.'),
+      NEED_ASC: bot.config.NEED_ASC || 'false'
+    };
+    
+    fs.writeFileSync(configPath, Object.entries(configWithDefaults)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n'));
+    
+    // Start Python shell
+    const pyshell = new PythonShell('main.py', {
+      args: [configPath],
+      mode: 'text',
+      pythonOptions: ['-u'],
+      pythonPath: pythonPath,
+      stderrParser: (line) => line,
+      stdoutParser: (line) => line
+    });
+    
+    // Add log function
+    const addLog = (message, type = 'info') => {
+      const logEntry = { message, type, timestamp: new Date().toISOString() };
+      bot.logs.push(logEntry);
+      io.emit('bot-log', { id, ...logEntry });
+    };
+    
+    // Set up event handlers
+    pyshell.on('message', (message) => {
+      console.log(`Bot ${id}:`, message);
+      addLog(message);
+    });
+    
+    pyshell.on('stderr', (message) => {
+      console.error(`Bot ${id} error:`, message);
+      addLog(message, 'error');
+    });
+    
+    pyshell.on('error', (err) => {
+      console.error(`Bot ${id} error:`, err);
+      addLog(err.message, 'error');
+      bot.status = 'error';
+    });
+    
+    pyshell.on('close', (code) => {
+      const message = code === 0 ? 'Bot finished successfully' : `Process exited with code ${code}`;
+      const type = code === 0 ? 'info' : 'error';
+      addLog(message, type);
+      bot.status = code === 0 ? 'completed' : 'error';
+      bot.pyshell = undefined;
+    });
+    
+    bot.pyshell = pyshell;
+    bot.status = 'running';
+    
+    addLog('Bot started');
+    
+    // Save to file
+    saveBotsToFile();
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error(`Error restarting bot ${id}:`, error);
+    res.status(500).json({ error: 'Failed to restart bot' });
+  }
 });
 
 app.get('/api/bots', (req, res) => {
