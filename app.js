@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const { Server } = require('socket.io');
 const http = require('http');
 const { PythonShell } = require('python-shell');
 const path = require('path');
 const fs = require('fs');
+const { sendAppointmentNotification } = require('./utils/emailService');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +16,40 @@ app.use(express.json());
 
 const activeBots = new Map();
 const BOTS_FILE = path.join(__dirname, 'active_bots.json');
+
+// Add these constants at the top of the file, after the imports
+const FACILITIES = {
+  "89": "Calgary",
+  "90": "Halifax",
+  "9": "Montreal (Closed)",
+  "92": "Ottawa",
+  "93": "Quebec City",
+  "94": "Toronto",
+  "95": "Vancouver"
+};
+
+const COUNTRIES = {
+  "ar": "Argentina",
+  "ec": "Ecuador",
+  "bs": "The Bahamas",
+  "gy": "Guyana",
+  "bb": "Barbados",
+  "jm": "Jamaica",
+  "bz": "Belize",
+  "mx": "Mexico",
+  "br": "Brazil",
+  "py": "Paraguay",
+  "bo": "Bolivia",
+  "pe": "Peru",
+  "ca": "Canada",
+  "sr": "Suriname",
+  "cl": "Chile",
+  "tt": "Trinidad and Tobago",
+  "co": "Colombia",
+  "uy": "Uruguay",
+  "cw": "Curacao",
+  "us": "United States (Domestic Visa Renewal)"
+};
 
 // Determine Python path based on environment
 const pythonPath = process.platform === 'win32' 
@@ -241,6 +277,27 @@ app.post('/api/bot/restart/:id', (req, res) => {
     let lastLogMessage = '';
     let duplicateCount = 0;
     
+    // Add a function to parse appointment date and time from log messages
+    function parseAppointmentDetails(message) {
+      // Look for the appointment date and time in the log message
+      const appointmentMatch = message.match(/Your current appointment: (\d{2}:\d{2}) (\d{4}-\d{2}-\d{2})/);
+      if (appointmentMatch) {
+        return {
+          time: appointmentMatch[1],
+          date: appointmentMatch[2]
+        };
+      }
+      
+      // Also check for the "Booked at" message format
+      const bookedMatch = message.match(/Success! Appointment booked successfully!/);
+      if (bookedMatch) {
+        return { booked: true };
+      }
+      
+      return null;
+    }
+    
+    // Update the addLog function to check for successful booking and send email notification
     const addLog = (message, type = 'info') => {
       // Format the message
       const formattedMessage = formatLogMessage(message, type);
@@ -248,6 +305,37 @@ app.post('/api/bot/restart/:id', (req, res) => {
       // Skip if the message should be filtered out
       if (formattedMessage === null) {
         return;
+      }
+      
+      // Check for appointment booking success
+      const appointmentDetails = parseAppointmentDetails(formattedMessage);
+      if (appointmentDetails && (appointmentDetails.booked || (appointmentDetails.date && appointmentDetails.time))) {
+        // Send email notification if environment variables are set
+        if (process.env.NOTIFICATION_EMAIL && process.env.SENDER_EMAIL && process.env.SENDER_PASSWORD) {
+          sendAppointmentNotification({
+            botEmail: bot.config.EMAIL,
+            appointmentDate: appointmentDetails.date || 'Check your account',
+            appointmentTime: appointmentDetails.time || 'Check your account',
+            facility: FACILITIES[bot.config.FACILITY_ID] || bot.config.FACILITY_ID || 'Unknown',
+            country: COUNTRIES[bot.config.COUNTRY] || bot.config.COUNTRY || 'Unknown'
+          }).then(result => {
+            if (result.success) {
+              io.emit('bot-log', { 
+                id, 
+                message: formatLogMessage('📧 Email notification sent successfully'), 
+                type: 'info', 
+                timestamp: new Date().toISOString() 
+              });
+            } else {
+              io.emit('bot-log', { 
+                id, 
+                message: formatLogMessage(`❌ Failed to send email notification: ${result.error}`), 
+                type: 'error', 
+                timestamp: new Date().toISOString() 
+              });
+            }
+          });
+        }
       }
       
       // Check for duplicate messages
@@ -378,6 +466,8 @@ function formatLogMessage(message, type = 'info') {
     } else if (cleanMessage.includes('DeprecationWarning')) {
       // Hide deprecation warnings as they're not critical
       return null;
+    } else if (cleanMessage.includes('Failed to send email notification')) {
+      emoji = '📧❌ ';
     }
   } else if (cleanMessage === 'Wait' || cleanMessage.includes('Wait')) {
     emoji = '⏳ ';
@@ -424,6 +514,9 @@ function formatLogMessage(message, type = 'info') {
   } else if (cleanMessage.includes('Booked at')) {
     emoji = '✅ ';
     cleanMessage = 'Success! Appointment booked successfully!';
+  } else if (cleanMessage.includes('Email notification sent')) {
+    emoji = '📧 ';
+    cleanMessage = 'Email notification sent successfully!';
   } else if (cleanMessage.includes('cleared')) {
     emoji = '🧹 ';
   } else if (cleanMessage.includes('stopped')) {

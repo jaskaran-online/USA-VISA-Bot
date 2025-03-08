@@ -30,6 +30,9 @@ RUN python3 -m venv venv && \
 # Copy application code
 COPY . .
 
+# Copy .env.example to .env if .env doesn't exist
+RUN if [ ! -f .env ]; then cp -n .env.example .env || true; fi
+
 # Expose port
 EXPOSE 3000
 

@@ -9,6 +9,7 @@ services:
     volumes:
       - ./active_bots.json:/app/active_bots.json
       - ./log.txt:/app/log.txt
+      - ./.env:/app/.env
     restart: unless-stopped
     environment:
       - NODE_ENV=production 

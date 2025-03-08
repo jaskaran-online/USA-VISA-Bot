@@ -205,7 +205,7 @@
               type="email"
               name="EMAIL"
               required
-              placeholder="Enter your email"
+              placeholder="Enter your visa account email"
             />
             <p class="text-xs text-gray-500 mt-1">
               Email used for your visa account
@@ -220,7 +220,7 @@
               type="password"
               name="PASSWORD"
               required
-              placeholder="Enter your password"
+              placeholder="Enter your visa account password"
             />
             <p class="text-xs text-gray-500 mt-1">
               Password for your visa account
@@ -297,6 +297,31 @@
             <i class="fas fa-calendar"></i>
             <input type="date" name="MIN_DATE" placeholder="Optional" />
           </div>
+
+          <!-- Email notification info -->
+          <div class="md:col-span-2 bg-blue-50 p-4 rounded-md">
+            <div class="flex items-start">
+              <i class="fas fa-envelope-open-text text-blue-500 mt-1 mr-3"></i>
+              <div>
+                <h3 class="text-md font-semibold text-gray-700">
+                  Email Notifications
+                </h3>
+                <p class="text-sm text-gray-600 mt-1">
+                  Email notifications are configured via environment variables
+                  in the
+                  <code class="bg-blue-100 px-1 rounded">.env</code> file. When
+                  an appointment is successfully booked, you'll receive an email
+                  notification if these variables are set.
+                </p>
+                <p class="text-xs text-gray-500 mt-2">
+                  See
+                  <code class="bg-blue-100 px-1 rounded">.env.example</code> for
+                  configuration details.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div class="md:col-span-2">
             <button
               type="submit"
