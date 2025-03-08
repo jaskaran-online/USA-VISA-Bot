@@ -291,17 +291,10 @@ app.post('/api/bot/clear-logs/:id', (req, res) => {
   }
   
   try {
-    // Keep only the most recent log entry
-    const lastLog = bot.logs.length > 0 ? bot.logs[bot.logs.length - 1] : null;
-    bot.logs = lastLog ? [
-      { message: 'Logs cleared by user', type: 'info', timestamp: new Date().toISOString() },
-      lastLog
-    ] : [
+    // Clear logs but add a message indicating they were cleared
+    bot.logs = [
       { message: 'Logs cleared by user', type: 'info', timestamp: new Date().toISOString() }
     ];
-    
-    // Emit log cleared event
-    io.emit('bot-logs-cleared', { id });
     
     // Save to file
     saveBotsToFile();
