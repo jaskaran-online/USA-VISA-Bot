@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  visa-bot:
+    build: .
+    container_name: usa-visa-bot
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./active_bots.json:/app/active_bots.json
+      - ./log.txt:/app/log.txt
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production 
