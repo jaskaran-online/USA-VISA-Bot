@@ -141,23 +141,25 @@ class AppointmentDateLowerMinDate(Exception):
 
 
 class Logger:
-    def __init__(self, log_file: str, log_format: str):
+    def __init__(self, log_file: str = None, log_format: str = LOG_FORMAT):
         log_formatter = logging.Formatter(log_format)
         root_logger = logging.getLogger()
 
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setFormatter(log_formatter)
-        root_logger.addHandler(file_handler)
+        if log_file:
+            file_handler = logging.FileHandler(log_file)
+            file_handler.setFormatter(log_formatter)
+            root_logger.addHandler(file_handler)
 
         console_handler = logging.StreamHandler()
         console_handler.setFormatter(log_formatter)
         root_logger.addHandler(console_handler)
 
         root_logger.setLevel("DEBUG")
-
         self.root_logger = root_logger
 
     def __call__(self, message: str | Exception):
+        msg = str(message)
+        print(msg)  # Print directly to stdout for web UI
         self.root_logger.debug(message, exc_info=isinstance(message, Exception))
 
 
@@ -858,9 +860,12 @@ class Bot:
 
 
 def main():
-    config = Config(CONFIG_FILE)
-    logger = Logger(LOG_FILE, LOG_FORMAT)
-    Bot(config, logger, ASC_FILE).process()
+    import sys
+    config_file = sys.argv[1] if len(sys.argv) > 1 else CONFIG_FILE
+    logger = Logger()
+    config = Config(config_file)
+    bot = Bot(config, logger, ASC_FILE)
+    bot.process()
 
 
 if __name__ == "__main__":

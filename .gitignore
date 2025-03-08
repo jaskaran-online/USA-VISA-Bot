@@ -8,3 +8,4 @@ config
 /fixed_dist/
 /log.txt
 asc
+node_modules
