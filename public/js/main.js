@@ -88,6 +88,14 @@ document.getElementById('activeBots').addEventListener('click', async (e) => {
     const botInstance = e.target.closest('.bot-instance');
     if (!botInstance) return;
 
+    // Handle clear logs button
+    const clearLogsButton = e.target.closest('.clear-logs');
+    if (clearLogsButton) {
+        const botId = botInstance.dataset.botId;
+        clearBotLogs(botId);
+        return;
+    }
+
     // Handle stop/restart button clicks
     const stopButton = e.target.closest('.stop-bot');
     const restartButton = e.target.closest('.restart-bot');
@@ -181,36 +189,41 @@ document.getElementById('activeBots').addEventListener('click', async (e) => {
 });
 
 // Handle bot logs
-socket.on('bot-log', ({ id, message, type, timestamp }) => {
+socket.on('bot-log', (data) => {
+    const { id, message, type, timestamp } = data;
     const bots = botStore.get();
+    
     if (bots[id]) {
         const logEntry = { message, type, timestamp };
         bots[id].logs.push(logEntry);
         botStore.set(bots);
         
-        // Only update logs for the selected bot
-        const selectedBotId = document.querySelector('.bot-instance.selected')?.dataset.botId;
-        if (selectedBotId === id) {
-            const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${id}"] .bot-logs`);
-            if (logsDiv) {
-                const logDiv = document.createElement('div');
-                logDiv.className = `log-entry ${type}`;
-                
-                const timeSpan = document.createElement('span');
-                timeSpan.className = 'log-time';
-                timeSpan.textContent = new Date(timestamp).toLocaleTimeString();
-                
-                const messageSpan = document.createElement('span');
-                messageSpan.className = 'log-message';
-                messageSpan.textContent = message;
-                
-                logDiv.appendChild(timeSpan);
-                logDiv.appendChild(messageSpan);
-                logsDiv.appendChild(logDiv);
-                logsDiv.scrollTop = logsDiv.scrollHeight;
-            }
+        // Update UI if this bot is currently visible
+        const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${id}"] .bot-logs`);
+        if (logsDiv) {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${type || 'info'}`;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'log-time';
+            timeSpan.textContent = new Date(timestamp).toLocaleTimeString();
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'log-message';
+            messageSpan.textContent = message;
+            
+            logDiv.appendChild(timeSpan);
+            logDiv.appendChild(messageSpan);
+            logsDiv.appendChild(logDiv);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
         }
     }
+});
+
+// Handle logs cleared event
+socket.on('bot-logs-cleared', (data) => {
+    const { id } = data;
+    updateBotLogs(id);
 });
 
 // Add bot to UI
@@ -345,5 +358,136 @@ window.addEventListener('beforeunload', () => {
         fetch(`/api/bot/stop/${bot.id}`, { method: 'POST' }).catch(() => {});
     });
 });
+
+// Clear bot logs
+async function clearBotLogs(botId) {
+    try {
+        // Call the API to clear logs on the server
+        const response = await fetch(`/api/bot/clear-logs/${botId}`, {
+            method: 'POST'
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to clear logs');
+        }
+        
+        // Update local storage
+        const bots = botStore.get();
+        if (bots[botId]) {
+            bots[botId].logs = [{ 
+                message: 'Logs cleared by user', 
+                type: 'info', 
+                timestamp: new Date().toISOString() 
+            }];
+            
+            botStore.set(bots);
+            
+            // Update UI
+            const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${botId}"] .bot-logs`);
+            if (logsDiv) {
+                logsDiv.innerHTML = '';
+                const logDiv = document.createElement('div');
+                logDiv.className = 'log-entry info';
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'log-time';
+                timeSpan.textContent = new Date().toLocaleTimeString();
+                
+                const messageSpan = document.createElement('span');
+                messageSpan.className = 'log-message';
+                messageSpan.textContent = 'Logs cleared by user';
+                
+                logDiv.appendChild(timeSpan);
+                logDiv.appendChild(messageSpan);
+                logsDiv.appendChild(logDiv);
+            }
+        }
+    } catch (error) {
+        console.error('Error clearing logs:', error);
+        alert('Failed to clear logs. Please try again.');
+    }
+}
+
+// Update bot logs in UI
+function updateBotLogs(botId) {
+    const bots = botStore.get();
+    if (!bots[botId]) return;
+    
+    const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${botId}"] .bot-logs`);
+    if (logsDiv) {
+        logsDiv.innerHTML = '';
+        bots[botId].logs.forEach(log => {
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${log.type || 'info'}`;
+            
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'log-time';
+            timeSpan.textContent = new Date(log.timestamp).toLocaleTimeString();
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.className = 'log-message';
+            messageSpan.textContent = typeof log === 'string' ? log : log.message;
+            
+            logDiv.appendChild(timeSpan);
+            logDiv.appendChild(messageSpan);
+            logsDiv.appendChild(logDiv);
+        });
+        logsDiv.scrollTop = logsDiv.scrollHeight;
+    }
+}
+
+// Auto-clear logs every 2 minutes
+function setupAutoClearLogs() {
+    setInterval(() => {
+        const bots = botStore.get();
+        let updated = false;
+        
+        for (const [id, bot] of Object.entries(bots)) {
+            if (bot.logs && bot.logs.length > 100) {
+                // Keep only the last 20 logs
+                const lastLogs = bot.logs.slice(-20);
+                bot.logs = [
+                    { 
+                        message: `Auto-cleared ${bot.logs.length - 20} older log entries`, 
+                        type: 'info', 
+                        timestamp: new Date().toISOString() 
+                    },
+                    ...lastLogs
+                ];
+                updated = true;
+                
+                // Update UI if this bot is currently visible
+                const logsDiv = document.querySelector(`.bot-instance[data-bot-id="${id}"] .bot-logs`);
+                if (logsDiv && logsDiv.style.display !== 'none') {
+                    logsDiv.innerHTML = '';
+                    bot.logs.forEach(log => {
+                        const logDiv = document.createElement('div');
+                        logDiv.className = `log-entry ${log.type || 'info'}`;
+                        
+                        const timeSpan = document.createElement('span');
+                        timeSpan.className = 'log-time';
+                        timeSpan.textContent = new Date(log.timestamp).toLocaleTimeString();
+                        
+                        const messageSpan = document.createElement('span');
+                        messageSpan.className = 'log-message';
+                        messageSpan.textContent = typeof log === 'string' ? log : log.message;
+                        
+                        logDiv.appendChild(timeSpan);
+                        logDiv.appendChild(messageSpan);
+                        logsDiv.appendChild(logDiv);
+                    });
+                }
+            }
+        }
+        
+        if (updated) {
+            botStore.set(bots);
+        }
+    }, 2 * 60 * 1000); // 2 minutes
+}
+
+// Initialize auto-clear logs
+setupAutoClearLogs();
 
 loadActiveBots();

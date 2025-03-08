@@ -281,6 +281,65 @@ app.get('/api/bots', (req, res) => {
   res.json(bots);
 });
 
+// Add API endpoint to clear logs
+app.post('/api/bot/clear-logs/:id', (req, res) => {
+  const { id } = req.params;
+  const bot = activeBots.get(id);
+  
+  if (!bot) {
+    return res.status(404).json({ error: 'Bot not found' });
+  }
+  
+  try {
+    // Keep only the most recent log entry
+    const lastLog = bot.logs.length > 0 ? bot.logs[bot.logs.length - 1] : null;
+    bot.logs = lastLog ? [
+      { message: 'Logs cleared by user', type: 'info', timestamp: new Date().toISOString() },
+      lastLog
+    ] : [
+      { message: 'Logs cleared by user', type: 'info', timestamp: new Date().toISOString() }
+    ];
+    
+    // Emit log cleared event
+    io.emit('bot-logs-cleared', { id });
+    
+    // Save to file
+    saveBotsToFile();
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error(`Error clearing logs for bot ${id}:`, error);
+    res.status(500).json({ error: 'Failed to clear logs' });
+  }
+});
+
+// Auto-clear logs periodically to prevent memory issues
+function setupAutoLogCleaning() {
+  setInterval(() => {
+    for (const [id, bot] of activeBots.entries()) {
+      if (bot.logs && bot.logs.length > 500) {
+        console.log(`Auto-clearing logs for bot ${id}, current log count: ${bot.logs.length}`);
+        
+        // Keep only the last 100 logs
+        const lastLogs = bot.logs.slice(-100);
+        bot.logs = [
+          { message: `Auto-cleared ${bot.logs.length - 100} older log entries`, type: 'info', timestamp: new Date().toISOString() },
+          ...lastLogs
+        ];
+        
+        // Emit log cleared event
+        io.emit('bot-logs-cleared', { id });
+      }
+    }
+    
+    // Save to file
+    saveBotsToFile();
+  }, 2 * 60 * 1000); // 2 minutes
+}
+
+// Initialize auto log cleaning
+setupAutoLogCleaning();
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
