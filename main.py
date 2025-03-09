@@ -696,21 +696,23 @@ class Bot:
             },
             data=urlencode(body)
         )
-
     def process(self):
         self.init()
         while True:
+            RANDOM_MINUTE = random.randint(2, 5)
+            print(f"Please wait {RANDOM_MINUTE} minutes before starting the bot")
             time.sleep(1.5)
             try:
                 now = datetime.now()
-                mod = now.minute % 5
+                mod = now.minute % RANDOM_MINUTE
 
-                if mod != 0 or now.second < 10:
-                    if now.second % 10 == 0:
-                        self.logger("⏳ Checking for appointments...")
+                if mod != 0 or now.second < 20:
+                    if now.second % 20 == 0:
+                        self.logger(f"⏳ Wait: {RANDOM_MINUTE - mod} minutes and {30 - now.second} seconds left")
                     continue
 
                 try:
+                    self.logger("⏳ Checking for appointments...")
                     available_dates = self.get_available_dates()
                 except HTTPError as err:
                     if err.response.status_code != 401:
@@ -718,6 +720,7 @@ class Bot:
 
                     self.logger("🔄 Session expired - reconnecting...")
                     self.init()
+                    self.logger("⏳ Checking for appointments...")
                     available_dates = self.get_available_dates()
 
                 if not available_dates:
@@ -727,6 +730,8 @@ class Bot:
                 # Show all available dates for user awareness
                 dates_info = []
                 after_current_found = False
+                after_current_count = 0
+                MAX_AFTER_DATES = 2
                 
                 for date_str in available_dates:
                     date_obj = parse_date(date_str)
@@ -739,7 +744,12 @@ class Bot:
                         if not after_current_found:
                             dates_info.append(f"\n⚠️ Following dates are after your current appointment ({self.appointment_datetime.strftime(DATE_FORMAT)}):")
                             after_current_found = True
-                        dates_info.append(f"  • {date_str}")
+                        if after_current_count < MAX_AFTER_DATES:
+                            dates_info.append(f"  • {date_str}")
+                            after_current_count += 1
+                        elif after_current_count == MAX_AFTER_DATES:
+                            dates_info.append(f"  • ... and more dates available")
+                            after_current_count += 1
                     else:
                         dates_info.append(f"  • {date_str} (✅ in range)")
 
