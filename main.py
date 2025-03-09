@@ -585,7 +585,6 @@ class Bot:
         response.raise_for_status()
 
         data = response.json()
-        self.logger(f"Response: {data}")
         dates = [x["date"] for x in data]
         dates.sort()
         return dates
@@ -603,7 +602,6 @@ class Bot:
         )
         response.raise_for_status()
         data = response.json()
-        self.logger(f"Response: {data}")
         times = data["available_times"] or data["business_times"]
         times.sort()
         return times
@@ -628,7 +626,6 @@ class Bot:
         )
         response.raise_for_status()
         data = response.json()
-        self.logger(f"Response: {data}")
         dates = [x["date"] for x in data]
         dates.sort()
         return dates
@@ -654,7 +651,6 @@ class Bot:
         )
         response.raise_for_status()
         data = response.json()
-        self.logger(f"Response: {data}")
         times = data["available_times"] or data["business_times"]
         times.sort()
         return times
@@ -711,7 +707,7 @@ class Bot:
 
                 if mod != 0 or now.second < 10:
                     if now.second % 10 == 0:
-                        self.logger("Server is busy, waiting...")
+                        self.logger("⏳ Checking for appointments...")
                     continue
 
                 try:
@@ -720,53 +716,52 @@ class Bot:
                     if err.response.status_code != 401:
                         raise err
 
-                    self.logger("Get 401")
+                    self.logger("🔄 Session expired - reconnecting...")
                     self.init()
                     available_dates = self.get_available_dates()
 
                 if not available_dates:
-                    self.logger("No available dates")
+                    self.logger("😔 No appointment dates available at any location")
                     continue
 
-                self.logger(f"All available dates: {available_dates}")
+                # Show all available dates for user awareness
+                dates_info = []
+                for date_str in available_dates:
+                    date_obj = parse_date(date_str)
+                    if self.config.max_date and date_obj > self.config.max_date:
+                        dates_info.append(f"  • {date_str} (❌ after your max date)")
+                    elif date_obj <= self.config.min_date:
+                        dates_info.append(f"  • {date_str} (❌ before your min date)")
+                    elif self.appointment_datetime and date_obj >= self.appointment_datetime.date():
+                        dates_info.append(f"  • {date_str} (❌ after your current appointment)")
+                    else:
+                        dates_info.append(f"  • {date_str} (✅ in range)")
+
+                self.logger("📅 Available dates:\n" + "\n".join(dates_info))
 
                 reinit_asc = False
                 for available_date_str in available_dates:
-                    self.logger(f"Next nearest date: {available_date_str}")
-
                     available_date = parse_date(available_date_str)
 
                     if available_date <= self.config.min_date:
-                        self.logger(
-                            "Nearest date is lower than your minimal date "
-                            f"{self.config.min_date.strftime(DATE_FORMAT)}"
-                        )
                         continue
 
                     if self.appointment_datetime and available_date >= self.appointment_datetime.date():
-                        self.logger(
-                            "Nearest date is greater than your current date "
-                            f"{self.appointment_datetime.strftime(DATE_FORMAT)}"
-                        )
-                        break
+                        continue
 
                     if self.config.max_date and available_date > self.config.max_date:
-                        self.logger(
-                            "Nearest date is greater than your maximal date "
-                            f"{self.config.max_date.strftime(DATE_FORMAT)}"
-                        )
-                        break
+                        continue
 
                     available_times = self.get_available_times(available_date_str)
                     if not available_times:
-                        self.logger("No available times")
+                        self.logger(f"⏰ No available time slots for {available_date_str}")
                         continue
 
-                    self.logger(f"All available times for date {available_date_str}: {available_times}")
+                    self.logger(f"⏰ Available times for {available_date_str}: {', '.join(available_times)}")
 
                     booked = False
                     for available_time_str in available_times:
-                        self.logger(f"Next nearest time: {available_time_str}")
+                        self.logger(f"🎯 Trying time slot: {available_time_str}")
 
                         asc_available_date_str = None
                         asc_available_time_str = None
@@ -790,7 +785,7 @@ class Bot:
                                 )
 
                                 if not asc_available_dates:
-                                    self.logger("No available ASC dates")
+                                    self.logger("🏢 No ASC dates available for this time slot")
                                     break
 
                                 asc_available_date_str = asc_available_dates[0]
@@ -802,7 +797,7 @@ class Bot:
                                 )
 
                                 if not asc_available_times:
-                                    self.logger("No available ASC times")
+                                    self.logger("🏢 No ASC time slots available for this date")
                                     continue
 
                                 asc_available_time_str = random.choice(asc_available_times)
@@ -832,6 +827,7 @@ class Bot:
                                 self.appointment_datetime.strftime(DATE_FORMAT)
                             )
 
+                            self.logger("🎉 Successfully booked appointment!")
                             self.logger(log)
                             booked = True
                             break
