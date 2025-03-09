@@ -697,18 +697,19 @@ class Bot:
             data=urlencode(body)
         )
     def process(self):
+        RANDOM_MINUTE = random.randint(2, 5)
+        RANDOM_SECOND = random.randint(40, 50)
+        print(f"Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
-            RANDOM_MINUTE = random.randint(2, 5)
-            print(f"Please wait {RANDOM_MINUTE} minutes before starting the bot")
             time.sleep(1.5)
             try:
                 now = datetime.now()
                 mod = now.minute % RANDOM_MINUTE
 
-                if mod != 0 or now.second < 20:
-                    if now.second % 20 == 0:
-                        self.logger(f"⏳ Wait: {RANDOM_MINUTE - mod} minutes and {30 - now.second} seconds left")
+                if mod != 0 or now.second < RANDOM_SECOND:
+                    if now.second % 10 == 0:
+                        self.logger(f"⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
                     continue
 
                 try:
