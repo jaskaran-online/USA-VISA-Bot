@@ -726,18 +726,29 @@ class Bot:
 
                 # Show all available dates for user awareness
                 dates_info = []
+                after_current_found = False
+                
                 for date_str in available_dates:
                     date_obj = parse_date(date_str)
+                    
                     if self.config.max_date and date_obj > self.config.max_date:
                         dates_info.append(f"  • {date_str} (❌ after your max date)")
                     elif date_obj <= self.config.min_date:
                         dates_info.append(f"  • {date_str} (❌ before your min date)")
                     elif self.appointment_datetime and date_obj >= self.appointment_datetime.date():
-                        dates_info.append(f"  • {date_str} (❌ after your current appointment)")
+                        if not after_current_found:
+                            dates_info.append(f"\n⚠️ Following dates are after your current appointment ({self.appointment_datetime.strftime(DATE_FORMAT)}):")
+                            after_current_found = True
+                        dates_info.append(f"  • {date_str}")
                     else:
                         dates_info.append(f"  • {date_str} (✅ in range)")
 
-                self.logger("📅 Available dates:\n" + "\n".join(dates_info))
+                self.logger("📅 Available dates:" + ("\n" if dates_info else " None found"))
+                if dates_info:
+                    self.logger("\n".join(dates_info))
+                    
+                # Add a blank line after the dates list
+                self.logger("")
 
                 reinit_asc = False
                 for available_date_str in available_dates:
