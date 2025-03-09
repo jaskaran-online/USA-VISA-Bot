@@ -59,6 +59,7 @@ try {
         const logEntry = { message, type: 'error', timestamp: new Date().toISOString() };
         botData.logs.push(logEntry);
         io.emit('bot-log', { id, ...logEntry });
+        console.error(`Bot ${id}:`, message);
       });
       
       pyshell.on('error', (err) => {
@@ -508,7 +509,8 @@ setupAutoLogCleaning();
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on`);
+  console.log(`http://localhost:${PORT}`);
 
   // Clean up orphaned config files
   fs.readdirSync(__dirname)
