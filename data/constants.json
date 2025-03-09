@@ -1,0 +1,23 @@
+{
+    "host": "ais.usvisa-info.com",
+    "header_keys": {
+        "referer": "Referer",
+        "accept": "Accept",
+        "set_cookie": "set-cookie",
+        "content_type": "Content-Type",
+        "cookie_header": "Cookie",
+        "x_csrf_token_header": "X-CSRF-Token"
+    },
+    "formats": {
+        "date_time_format": "%H:%M %Y-%m-%d",
+        "date_format": "%d.%m.%Y",
+        "html_parser": "html.parser"
+    },
+    "files": {
+        "config_file": "config",
+        "asc_file": "asc",
+        "log_file": "log.txt"
+    },
+    "log_format": "%(asctime)s  %(message)s",
+    "none_value": "None"
+} 

@@ -5,12 +5,12 @@
       "PASSWORD": "Navpreet@sandhu123",
       "COUNTRY": "ca",
       "SCHEDULE_ID": "62971969",
-      "FACILITY_ID": "89",
+      "FACILITY_ID": "94",
       "ASC_FACILITY_ID": "",
       "MIN_DATE": ""
     },
     "startTime": "2025-03-08T12:33:22.568Z",
-    "status": "stopped",
+    "status": "error",
     "logs": []
   }
 }

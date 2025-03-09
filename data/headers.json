@@ -1,0 +1,36 @@
+{
+    "default_headers": {
+        "Host": "ais.usvisa-info.com",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 YaBrowser/24.1.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\", \"YaBrowser\";v=\"24.1\", \"Yowser\";v=\"2.5\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows"
+    },
+    "cache_control_headers": {
+        "Cache-Control": "no-store"
+    },
+    "document_headers": {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "ru,en;q=0.9,de;q=0.8,bg;q=0.7",
+        "Connection": "keep-alive",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Upgrade-Insecure-Requests": "1"
+    },
+    "json_headers": {
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "ru,en;q=0.9,de;q=0.8,bg;q=0.7",
+        "Connection": "keep-alive",
+        "X-Requested-With": "XMLHttpRequest",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin"
+    },
+    "sec_fetch_user_headers": {
+        "Sec-Fetch-User": "?1"
+    }
+} 

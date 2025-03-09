@@ -1,0 +1,19 @@
+{
+    "facilities": {
+        "89": "Calgary",
+        "90": "Halifax",
+        "9": "Montreal (Closed)",
+        "92": "Ottawa",
+        "93": "Quebec City",
+        "94": "Toronto",
+        "95": "Vancouver"
+    },
+    "asc_facilities": {
+        "89": "Calgary ASC",
+        "90": "Halifax ASC",
+        "92": "Ottawa ASC",
+        "93": "Quebec City ASC",
+        "94": "Toronto ASC",
+        "95": "Vancouver ASC"
+    }
+} 

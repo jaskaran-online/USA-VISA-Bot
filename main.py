@@ -5,144 +5,96 @@ import random
 import re
 import time
 from datetime import datetime, date, timedelta
-from typing import Optional
+from typing import Optional, Dict, Any
 from urllib.parse import urlencode
 
 import requests
 from bs4 import BeautifulSoup
 from requests import Response, HTTPError
 
-HOST = "ais.usvisa-info.com"
-REFERER = "Referer"
-ACCEPT = "Accept"
-SET_COOKIE = "set-cookie"
-CONTENT_TYPE = "Content-Type"
-CACHE_CONTROL_HEADERS = {
-    "Cache-Control": "no-store"
-}
-DEFAULT_HEADERS = {
-    "Host": HOST,
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, "
-                  "like Gecko) Chrome/120.0.0.0 YaBrowser/24.1.0.0 Safari/537.36",
-    "sec-ch-ua": "\"Not_A Brand\";v=\"8\", \"Chromium\";v=\"120\", "
-                 "\"YaBrowser\";v=\"24.1\", \"Yowser\";v=\"2.5\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "Windows",
-}
-SEC_FETCH_USER_HEADERS = {
-    "Sec-Fetch-User": "?1"
-}
-DOCUMENT_HEADERS = {
-    **DEFAULT_HEADERS,
-    **CACHE_CONTROL_HEADERS,
-    ACCEPT: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,"
-            "image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "ru,en;q=0.9,de;q=0.8,bg;q=0.7",
-    "Connection": "keep-alive",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "same-origin",
-    "Referrer-Policy": "strict-origin-when-cross-origin",
-    "Upgrade-Insecure-Requests": "1"
-}
-JSON_HEADERS = {
-    **DEFAULT_HEADERS,
-    ACCEPT: "application/json, text/javascript, */*; q=0.01",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Accept-Language": "ru,en;q=0.9,de;q=0.8,bg;q=0.7",
-    "Connection": "keep-alive",
-    "X-Requested-With": "XMLHttpRequest",
-    "Sec-Fetch-Dest": "empty",
-    "Sec-Fetch-Mode": "cors",
-    "Sec-Fetch-Site": "same-origin"
-}
-X_CSRF_TOKEN_HEADER = "X-CSRF-Token"
-COOKIE_HEADER = "Cookie"
-FACILITIES = {
-    "89": "Calgary",
-    "90": "Halifax",
-    "9": "Montreal (Closed)",
-    "92": "Ottawa",
-    "93": "Quebec City",
-    "94": "Toronto",
-    "95": "Vancouver"
-}
 
-ASC_FACILITIES = {
-    "89": "Calgary ASC",
-    "90": "Halifax ASC",
-    "92": "Ottawa ASC",
-    "93": "Quebec City ASC",
-    "94": "Toronto ASC",
-    "95": "Vancouver ASC"
-}
+class ConfigLoader:
+    """Handles loading and caching of JSON configuration files"""
+    
+    def __init__(self):
+        self._data_dir = "data"
+        self._cache = {}
+        
+    def _load_json(self, filename: str) -> Dict[str, Any]:
+        """Load JSON file from data directory"""
+        if filename in self._cache:
+            return self._cache[filename]
+            
+        filepath = os.path.join(self._data_dir, filename)
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"Configuration file {filepath} not found")
+            
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+            self._cache[filename] = data
+            return data
+            
+    @property
+    def constants(self) -> Dict[str, Any]:
+        return self._load_json("constants.json")
+        
+    @property
+    def headers(self) -> Dict[str, Any]:
+        return self._load_json("headers.json")
+        
+    @property
+    def facilities(self) -> Dict[str, Any]:
+        return self._load_json("facilities.json")
+        
+    @property
+    def countries(self) -> Dict[str, str]:
+        return self._load_json("countries.json")
 
-COUNTRIES = {
-    "ar": "Argentina",
-    "ec": "Ecuador",
-    "bs": "The Bahamas",
-    "gy": "Guyana",
-    "bb": "Barbados",
-    "jm": "Jamaica",
-    "bz": "Belize",
-    "mx": "Mexico",
-    "br": "Brazil",
-    "py": "Paraguay",
-    "bo": "Bolivia",
-    "pe": "Peru",
-    "ca": "Canada",
-    "sr": "Suriname",
-    "cl": "Chile",
-    "tt": "Trinidad and Tobago",
-    "co": "Colombia",
-    "uy": "Uruguay",
-    "cw": "Curacao",
-    "us": "United States (Domestic Visa Renewal)",
-    "al": "Albania",
-    "ie": "Ireland",
-    "am": "Armenia",
-    "kv": "Kosovo",
-    "az": "Azerbaijan",
-    "mk": "North Macedonia",
-    "be": "Belgium",
-    "nl": "The Netherlands",
-    "ba": "Bosnia and Herzegovina",
-    "pt": "Portugal",
-    "hr": "Croatia",
-    "rs": "Serbia",
-    "cy": "Cyprus",
-    "es": "Spain and Andorra",
-    "fr": "France",
-    "tr": "Turkiye",
-    "gr": "Greece",
-    "gb": "United Kingdom",
-    "it": "Italy",
-    "il": "Israel, Jerusalem, The West Bank, and Gaza",
-    "ae": "United Arab Emirates",
-    "ir": "Iran",
-    "ao": "Angola",
-    "rw": "Rwanda",
-    "cm": "Cameroon",
-    "sn": "Senegal",
-    "cv": "Cabo Verde",
-    "tz": "Tanzania",
-    "cd": "The Democratic Republic of the Congo",
-    "za": "South Africa",
-    "et": "Ethiopia",
-    "ug": "Uganda",
-    "ke": "Kenya",
-    "zm": "Zambia",
-}
-DATE_TIME_FORMAT = "%H:%M %Y-%m-%d"
-DATE_FORMAT = "%d.%m.%Y"
-HTML_PARSER = "html.parser"
-NONE = "None"
+# Initialize global config loader
+config_loader = ConfigLoader()
 
-CONFIG_FILE = "config"
-ASC_FILE = "asc"
-LOG_FILE = "log.txt"
-LOG_FORMAT = "%(asctime)s  %(message)s"
+# Load constants
+CONSTANTS = config_loader.constants
+HOST = CONSTANTS["host"]
+HEADER_KEYS = CONSTANTS["header_keys"]
+FORMATS = CONSTANTS["formats"]
+FILES = CONSTANTS["files"]
+LOG_FORMAT = CONSTANTS["log_format"]
+NONE = CONSTANTS["none_value"]
+
+# Load headers
+HEADERS = config_loader.headers
+DEFAULT_HEADERS = {**HEADERS["default_headers"], "Host": HOST}
+CACHE_CONTROL_HEADERS = HEADERS["cache_control_headers"]
+DOCUMENT_HEADERS = {**DEFAULT_HEADERS, **CACHE_CONTROL_HEADERS, **HEADERS["document_headers"]}
+JSON_HEADERS = {**DEFAULT_HEADERS, **HEADERS["json_headers"]}
+SEC_FETCH_USER_HEADERS = HEADERS["sec_fetch_user_headers"]
+
+# Load facilities data
+FACILITIES_DATA = config_loader.facilities
+FACILITIES = FACILITIES_DATA["facilities"]
+ASC_FACILITIES = FACILITIES_DATA["asc_facilities"]
+
+# Load countries
+COUNTRIES = config_loader.countries
+
+# Constants from formats
+DATE_TIME_FORMAT = FORMATS["date_time_format"]
+DATE_FORMAT = FORMATS["date_format"]
+HTML_PARSER = FORMATS["html_parser"]
+
+# Constants from files
+CONFIG_FILE = FILES["config_file"]
+ASC_FILE = FILES["asc_file"]
+LOG_FILE = FILES["log_file"]
+
+# Header keys
+REFERER = HEADER_KEYS["referer"]
+ACCEPT = HEADER_KEYS["accept"]
+SET_COOKIE = HEADER_KEYS["set_cookie"]
+CONTENT_TYPE = HEADER_KEYS["content_type"]
+COOKIE_HEADER = HEADER_KEYS["cookie_header"]
+X_CSRF_TOKEN_HEADER = HEADER_KEYS["x_csrf_token_header"]
 
 
 def parse_date(date_str: str) -> date:
@@ -151,33 +103,62 @@ def parse_date(date_str: str) -> date:
 
 class NoScheduleIdException(Exception):
     def __init__(self):
-        super().__init__("No schedule id")
+        super().__init__("❌ No appointment schedule found. Please make sure you have an active visa application.")
 
 
 class AppointmentDateLowerMinDate(Exception):
     def __init__(self):
-        super().__init__("Current appointment date and time lower than specified minimal date")
+        super().__init__("⚠️ Current appointment date is earlier than your specified minimum date")
 
 
 class Logger:
+    """Enhanced logger with user-friendly messages"""
+    
     def __init__(self, log_file: str = None, log_format: str = LOG_FORMAT):
-        log_formatter = logging.Formatter(log_format)
-        root_logger = logging.getLogger()
+        self.log_formatter = logging.Formatter(log_format)
+        self.root_logger = logging.getLogger()
 
         if log_file:
             file_handler = logging.FileHandler(log_file)
-            file_handler.setFormatter(log_formatter)
-            root_logger.addHandler(file_handler)
+            file_handler.setFormatter(self.log_formatter)
+            self.root_logger.addHandler(file_handler)
 
         console_handler = logging.StreamHandler()
-        console_handler.setFormatter(log_formatter)
-        root_logger.addHandler(console_handler)
+        console_handler.setFormatter(self.log_formatter)
+        self.root_logger.addHandler(console_handler)
 
-        root_logger.setLevel("DEBUG")
-        self.root_logger = root_logger
+        self.root_logger.setLevel("DEBUG")
+        
+    def _format_message(self, message: str | Exception) -> str:
+        """Format message to be more user-friendly"""
+        msg = str(message)
+        
+        # Common message improvements
+        improvements = {
+            "Get sign in": "🔐 Signing into your account...",
+            "Post sing in": "🔑 Verifying credentials...",
+            "Get current appointment": "📅 Fetching your current appointment details...",
+            "Not found facility_id": "⚠️ No facility selected - will auto-select one",
+            "Not found asc_facility_id": "⚠️ No ASC facility selected - will auto-select one",
+            "Get available date": "🔍 Searching for available appointment dates...",
+            "No available dates": "😔 No appointment dates available at this time",
+            "Get available time": "🕒 Checking available time slots...",
+            "No available times": "😔 No time slots available for this date",
+            "Server is busy": "⏳ Server is busy, waiting for response...",
+            "Book": "📝 Attempting to book appointment...",
+            "Get 401": "🔄 Session expired - reconnecting...",
+            "Init csrf": "🔒 Initializing secure session...",
+        }
+        
+        # Replace known messages with improved versions
+        for old, new in improvements.items():
+            if old in msg:
+                return new
+                
+        return msg
 
     def __call__(self, message: str | Exception):
-        msg = str(message)
+        msg = self._format_message(message)
         print(msg)  # Print directly to stdout for web UI
         self.root_logger.debug(message, exc_info=isinstance(message, Exception))
 
@@ -190,13 +171,33 @@ class Appointment:
 
 
 class Config:
+    """Configuration manager for the visa appointment bot"""
+    
     def __init__(self, config_file: str):
         self.config_file = config_file
         self.logger = logging.getLogger()
 
-        config_data = dict()
+        # Initialize with defaults
+        self.email: Optional[str] = None
+        self.password: Optional[str] = None
+        self.country: Optional[str] = None
+        self.facility_id: Optional[str] = None
+        self.asc_facility_id: Optional[str] = None
+        self.schedule_id: Optional[str] = None
+        self.need_asc = False
+        self.min_date: date = datetime.now().date()
+        self.max_date: Optional[date] = None
+
+        self._load_config()
+
+    def _load_config(self):
+        """Load configuration from file with improved error handling"""
         if not os.path.exists(self.config_file):
             open(self.config_file, 'w').close()
+            self.logger.warning("⚠️ Created new empty configuration file")
+            return
+
+        config_data = {}
         with open(self.config_file, "r") as f:
             for line in f.readlines():
                 param = line.strip().split("=", maxsplit=1)
@@ -204,92 +205,84 @@ class Config:
                     key = param[0].strip()
                     value = param[1].strip()
                     if value and value != NONE:
-                        config_data[key] = param[1].strip()
+                        config_data[key] = value
                     else:
                         config_data[key] = None
 
-        self.email: str = config_data.get("EMAIL")
+        # Validate required fields
+        self.email = config_data.get("EMAIL")
         if not self.email:
-            raise ValueError("Email is required")
+            raise ValueError("❌ Email address is required in the configuration")
 
-        self.password: str = config_data.get("PASSWORD")
+        self.password = config_data.get("PASSWORD")
         if not self.password:
-            raise ValueError("Password is required")
+            raise ValueError("❌ Password is required in the configuration")
 
-        self.country: str = config_data.get("COUNTRY")
-        if not self.country or self.country not in COUNTRIES:
-            raise ValueError("Valid country code is required")
+        self.country = config_data.get("COUNTRY")
+        if not self.country:
+            raise ValueError("❌ Country code is required in the configuration")
+        if self.country not in COUNTRIES:
+            raise ValueError(f"❌ Invalid country code '{self.country}'. Valid options are: {', '.join(COUNTRIES.keys())}")
 
+        # Parse dates
         min_date = config_data.get("MIN_DATE")
         if min_date:
             try:
-                min_date = datetime.strptime(min_date, DATE_FORMAT)
-            except ValueError | TypeError:
-                min_date = datetime.now()
-        else:
-            min_date = datetime.now()
-        self.min_date: date = min_date.date()
+                self.min_date = datetime.strptime(min_date, DATE_FORMAT).date()
+            except (ValueError, TypeError):
+                self.logger.warning("⚠️ Invalid minimum date format, using current date")
+                self.min_date = datetime.now().date()
 
         max_date = config_data.get("MAX_DATE")
-        if max_date:
+        if max_date and max_date != NONE:
             try:
-                max_date = datetime.strptime(max_date, DATE_FORMAT)
-            except ValueError | TypeError:
-                max_date = None
-        self.max_date: Optional[date] = max_date.date() if max_date else None
+                self.max_date = datetime.strptime(max_date, DATE_FORMAT).date()
+            except (ValueError, TypeError):
+                self.logger.warning("⚠️ Invalid maximum date format, no maximum date will be used")
+                self.max_date = None
 
-        # ASC registration is always disabled by default
-        self.need_asc = False
-
-        self.schedule_id: Optional[str] = config_data.get("SCHEDULE_ID")
-
+        # Load optional fields
+        self.schedule_id = config_data.get("SCHEDULE_ID")
         if self.schedule_id:
-            facility_id = config_data.get("FACILITY_ID")
-            if facility_id and facility_id not in FACILITIES:
-                print(f"Warning: Invalid facility ID {facility_id}, will auto-select from available facilities")
-                facility_id = None
-            self.facility_id: Optional[str] = facility_id
-            asc_facility_id = config_data.get("ASC_FACILITY_ID")
-            if asc_facility_id and asc_facility_id not in ASC_FACILITIES:
-                print(f"Warning: Invalid ASC facility ID {asc_facility_id}, will auto-select from available facilities")
-                asc_facility_id = None
-            self.asc_facility_id: Optional[str] = asc_facility_id
-        else:
-            self.facility_id = None
-            self.asc_facility_id = None
+            self.facility_id = config_data.get("FACILITY_ID")
+            if self.facility_id and self.facility_id not in FACILITIES:
+                self.logger.warning(f"⚠️ Invalid facility ID {self.facility_id}, will auto-select from available facilities")
+                self.facility_id = None
 
-        self.__save()
+            self.asc_facility_id = config_data.get("ASC_FACILITY_ID")
+            if self.asc_facility_id and self.asc_facility_id not in ASC_FACILITIES:
+                self.logger.warning(f"⚠️ Invalid ASC facility ID {self.asc_facility_id}, will auto-select from available facilities")
+                self.asc_facility_id = None
 
     def set_facility_id(self, locations: dict[str, str]):
-        # Use pre-configured facility if valid
+        """Set facility ID with user-friendly messages"""
         if self.facility_id and self.facility_id in FACILITIES:
-            print(f"Using configured facility: {self.facility_id} - {FACILITIES[self.facility_id]}")
+            self.logger.info(f"🏢 Using configured facility: {self.facility_id} - {FACILITIES[self.facility_id]}")
             return
 
-        # Otherwise auto-select first available
         self.facility_id = next(iter(locations))
-        print(f"Auto-selected consul facility: {self.facility_id} - {locations[self.facility_id]}")
+        self.logger.info(f"🏢 Auto-selected facility: {self.facility_id} - {locations[self.facility_id]}")
         self.__save()
 
     def set_asc_facility_id(self, locations: dict[str, str]):
-        # Use pre-configured ASC facility if valid
+        """Set ASC facility ID with user-friendly messages"""
         if self.asc_facility_id and self.asc_facility_id in ASC_FACILITIES:
-            print(f"Using configured ASC facility: {self.asc_facility_id} - {ASC_FACILITIES[self.asc_facility_id]}")
+            self.logger.info(f"🏢 Using configured ASC facility: {self.asc_facility_id} - {ASC_FACILITIES[self.asc_facility_id]}")
             return
 
-        # Otherwise auto-select first available
         self.asc_facility_id = next(iter(locations))
-        print(f"Auto-selected ASC facility: {self.asc_facility_id} - {ASC_FACILITIES.get(self.asc_facility_id, locations[self.asc_facility_id])}")
+        self.logger.info(f"🏢 Auto-selected ASC facility: {self.asc_facility_id} - {ASC_FACILITIES.get(self.asc_facility_id, locations[self.asc_facility_id])}")
         self.__save()
 
     def set_schedule_id(self, schedule_ids: dict[str, Appointment]):
-        # Always select the first available schedule
+        """Set schedule ID with user-friendly messages"""
         self.schedule_id = next(iter(schedule_ids))
         selected_appointment = schedule_ids[self.schedule_id]
-        print(f"Auto-selected schedule: {self.schedule_id} - {selected_appointment.description}")
+        self.logger.info(f"📋 Selected schedule: {self.schedule_id} - {selected_appointment.description}")
         self.__save()
 
     def __save(self):
+        """Save configuration to file"""
         with open(self.config_file, "w") as f:
             f.write(
                 f"EMAIL={self.email}"
@@ -302,6 +295,7 @@ class Config:
                 f"\nASC_FACILITY_ID={self.asc_facility_id}"
                 f"\nSCHEDULE_ID={self.schedule_id}"
             )
+        self.logger.debug("💾 Configuration saved")
 
 
 class Bot:
@@ -310,12 +304,60 @@ class Bot:
         self.config = config
         self.asc_file = asc_file
         self.url = f"https://{HOST}/en-{config.country}/niv"
+        self.country_name = COUNTRIES.get(config.country, "Unknown")
 
         self.appointment_datetime: Optional[datetime] = None
         self.csrf: Optional[str] = None
         self.cookie: Optional[str] = None
         self.session = requests.session()
         self.asc_dates = dict()
+        
+        self.logger(f"🌍 Initializing bot for {self.country_name}")
+
+    def format_appointment_info(self, time_str: str, date_str: str, asc_time_str: Optional[str] = None, asc_date_str: Optional[str] = None) -> str:
+        """Format appointment information in a user-friendly way"""
+        log = (
+            "\n╔════════════════════════╗\n"
+            "║                        ║\n"
+            "║   📅 Appointment Info  ║\n"
+            "║                        ║\n"
+            f"║   Time: {time_str}        ║\n"
+            f"║   Date: {date_str}    ║\n"
+        )
+
+        if asc_time_str and asc_date_str:
+            log += (
+                "║                        ║\n"
+                "║   🏢 ASC Details       ║\n"
+                f"║   Time: {asc_time_str}        ║\n"
+                f"║   Date: {asc_date_str}    ║\n"
+            )
+
+        log += (
+            "║                        ║\n"
+            "╚════════════════════════╝"
+        )
+        return log
+
+    def safe_request(self, method: str, url: str, **kwargs) -> Response:
+        """Make a request with proper error handling"""
+        try:
+            response = self.session.request(method, url, **kwargs)
+            response.raise_for_status()
+            return response
+        except HTTPError as e:
+            if e.response.status_code == 401:
+                self.logger("🔄 Session expired, reconnecting...")
+                self.init()
+                response = self.session.request(method, url, **kwargs)
+                response.raise_for_status()
+                return response
+            else:
+                self.logger(f"❌ HTTP Error: {e.response.status_code} - {e.response.reason}")
+                raise
+        except Exception as e:
+            self.logger(f"❌ Request failed: {str(e)}")
+            raise
 
     @staticmethod
     def get_csrf(response: Response) -> str:
@@ -667,8 +709,8 @@ class Bot:
                 now = datetime.now()
                 mod = now.minute % 5
 
-                if mod != 0 or now.second < 60:
-                    if now.second % 60 == 0:
+                if mod != 0 or now.second < 10:
+                    if now.second % 10 == 0:
                         self.logger("Server is busy, waiting...")
                     continue
 
@@ -765,28 +807,11 @@ class Bot:
 
                                 asc_available_time_str = random.choice(asc_available_times)
 
-                        log = (
-                            "=====================\n"
-                            "#                   #\n"
-                            "#                   #\n"
-                            "#    Try to book    #\n"
-                            "#                   #\n"
-                            "#                   #\n"
-                            f"# {available_time_str}  {available_date_str} #\n"
-                        )
-
-                        if asc_available_date_str and asc_available_time_str:
-                            log += (
-                                "#                   #\n"
-                                "#                   #\n"
-                                "#     With  ASC     #\n"
-                                f"# {asc_available_time_str}  {asc_available_date_str} #\n"
-                            )
-
-                        log += (
-                            "#                   #\n"
-                            "#                   #\n"
-                            "====================="
+                        log = self.format_appointment_info(
+                            available_time_str,
+                            available_date_str,
+                            asc_available_time_str,
+                            asc_available_date_str
                         )
 
                         self.logger(log)
@@ -802,30 +827,9 @@ class Bot:
                         self.init_current_data()
 
                         if appointment_datetime != self.appointment_datetime:
-                            log = (
-                                "=====================\n"
-                                "#                   #\n"
-                                "#                   #\n"
-                                "#     Booked at     #\n"
-                                "#                   #\n"
-                                "#                   #\n"
-                                f"# {self.appointment_datetime.strftime(DATE_TIME_FORMAT)} #\n"
-                            )
-
-                            if asc_available_date_str and asc_available_time_str:
-                                log += (
-                                    "#                   #\n"
-                                    "#                   #\n"
-                                    "#     With  ASC     #\n"
-                                    f"# {asc_available_time_str}  {asc_available_date_str} #\n"
-                                )
-
-                            log += (
-                                "#                   #\n"
-                                "#                   #\n"
-                                "#  Close window to  #\n"
-                                "#    end awaiting   #\n"
-                                "====================="
+                            log = self.format_appointment_info(
+                                self.appointment_datetime.strftime(DATE_TIME_FORMAT),
+                                self.appointment_datetime.strftime(DATE_FORMAT)
                             )
 
                             self.logger(log)
@@ -850,16 +854,37 @@ class Bot:
 
 
 def main():
+    """Main entry point for the visa appointment bot"""
     import sys
-    config_file = sys.argv[1] if len(sys.argv) > 1 else CONFIG_FILE
-    logger = Logger()
-    config = Config(config_file)
-    bot = Bot(config, logger, ASC_FILE)
-    bot.process()
+    
+    print("\n🌟 USA Visa Appointment Bot")
+    print("==========================\n")
+    
+    try:
+        config_file = sys.argv[1] if len(sys.argv) > 1 else CONFIG_FILE
+        print(f"📝 Using configuration file: {config_file}")
+        
+        logger = Logger(LOG_FILE)
+        logger("🚀 Starting the appointment bot...")
+        
+        config = Config(config_file)
+        logger(f"✅ Configuration loaded for {COUNTRIES[config.country]}")
+        
+        bot = Bot(config, logger, ASC_FILE)
+        logger("🤖 Bot initialized successfully")
+        
+        print("\n⏳ Starting appointment search process...")
+        print("Press Ctrl+C to stop the bot at any time\n")
+        
+        bot.process()
+        
+    except KeyboardInterrupt:
+        print("\n\n👋 Bot stopped by user. Goodbye!")
+    except Exception as e:
+        print(f"\n❌ Error: {str(e)}")
+        print("\nFor help, please check the documentation or report this issue.")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
+    main()
