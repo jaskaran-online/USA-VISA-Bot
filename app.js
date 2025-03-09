@@ -50,21 +50,18 @@ try {
       
       // Set up event handlers
       pyshell.on('message', (message) => {
-        console.log(`Bot ${id}:`, message);
         const logEntry = { message, type: 'info', timestamp: new Date().toISOString() };
         botData.logs.push(logEntry);
         io.emit('bot-log', { id, ...logEntry });
       });
       
       pyshell.on('stderr', (message) => {
-        console.error(`Bot ${id} error:`, message);
         const logEntry = { message, type: 'error', timestamp: new Date().toISOString() };
         botData.logs.push(logEntry);
         io.emit('bot-log', { id, ...logEntry });
       });
       
       pyshell.on('error', (err) => {
-        console.error(`Bot ${id} error:`, err);
         const logEntry = { message: err.message, type: 'error', timestamp: new Date().toISOString() };
         botData.logs.push(logEntry);
         io.emit('bot-log', { id, ...logEntry });
@@ -297,17 +294,14 @@ app.post('/api/bot/restart/:id', (req, res) => {
     
     // Set up event handlers
     pyshell.on('message', (message) => {
-      console.log(`Bot ${id}:`, message);
       addLog(message);
     });
     
     pyshell.on('stderr', (message) => {
-      console.error(`Bot ${id} error:`, message);
       addLog(message, 'error');
     });
     
     pyshell.on('error', (err) => {
-      console.error(`Bot ${id} error:`, err);
       addLog(err.message, 'error');
       bot.status = 'error';
     });
