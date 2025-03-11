@@ -372,7 +372,12 @@ class Bot:
         """
             
         self.logger(f"🔔 Sending email notification for bot start")
-        self.logger(email_body)
+        self.logger(f"🔔 Email: {self.config.email}")
+        self.logger(f"🔔 Country: {self.country_name}")
+        self.logger(f"🔔 Facility ID: {self.config.facility_id or 'Not specified'}")
+        self.logger(f"🔔 Min Date: {self.config.min_date}")
+        self.logger(f"🔔 Max Date: {self.config.max_date or 'Not specified'}")
+        self.logger(f"🔔 Start Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         send_email(f"Visa Bot Started - {self.config.email}", email_body)
 
     def format_appointment_info(self, time_str: str, date_str: str, asc_time_str: Optional[str] = None, asc_date_str: Optional[str] = None) -> str:
@@ -508,7 +513,7 @@ class Bot:
         )
         response.raise_for_status()
 
-        applications = BeautifulSoup(response.text, HTML_PARSER).findAll("div", {"class": "application"})
+        applications = BeautifulSoup(response.text, HTML_PARSER).find_all("div", {"class": "application"})
 
         if not applications:
             raise NoScheduleIdException()
@@ -522,7 +527,7 @@ class Bot:
                 continue
 
             schedule_id = schedule_id.group(0)
-            description = ' '.join([x.get_text() for x in application.findAll("td")][0:4])
+            description = ' '.join([x.get_text() for x in application.find_all("td")][0:4])
             appointment_datetime = application.find("p", {"class": "consular-appt"})
             if appointment_datetime:
                 appointment_datetime = re.search(r"\d{1,2} \w+?, \d{4}, \d{1,2}:\d{1,2}",
@@ -593,8 +598,8 @@ class Bot:
         self.logger("Get location list")
         locations = (BeautifulSoup(self.load_change_appointment_page().text, HTML_PARSER)
                      .find("select", {"id": element_id})
-                     .findAll("option"))
-        facility_id_to_location = dict[str, str]()
+                     .find_all("option"))
+        facility_id_to_location = dict()
         for location in locations:
             if location["value"]:
                 facility_id_to_location[location["value"]] = location.text
