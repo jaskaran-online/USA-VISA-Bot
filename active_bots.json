@@ -1,4 +1,64 @@
 {
+  "664225161": {
+    "id": "66422516",
+    "config": {
+      "EMAIL": "gurjodhhundal540@gmail.com",
+      "PASSWORD": "Hundal@1",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66422516",
+      "FACILITY_ID": "89",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "status": "running",
+    "startTime": "2025-03-09T04:16:59.821Z",
+    "logs": []
+  },
+  "664225162": {
+    "id": "664225162",
+    "config": {
+      "EMAIL": "gurjodhhundal540@gmail.com",
+      "PASSWORD": "Hundal@1",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66422516",
+      "FACILITY_ID": "92",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "status": "running",
+    "startTime": "2025-03-09T04:16:59.821Z",
+    "logs": []
+  },
+  "664225163": {
+    "id": "664225163",
+    "config": {
+      "EMAIL": "gurjodhhundal540@gmail.com",
+      "PASSWORD": "Hundal@1",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66422516",
+      "FACILITY_ID": "94",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "status": "running",
+    "startTime": "2025-03-09T04:16:59.821Z",
+    "logs": []
+  },
+  "664225164": {
+    "id": "664225164",
+    "config": {
+      "EMAIL": "gurjodhhundal540@gmail.com",
+      "PASSWORD": "Hundal@1",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66422516",
+      "FACILITY_ID": "95",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "status": "running",
+    "startTime": "2025-03-09T04:16:59.821Z",
+    "logs": []
+  },
   "1741437202567": {
     "config": {
       "EMAIL": "sandhunavpreet009@gmail.com",
@@ -7,55 +67,10 @@
       "SCHEDULE_ID": "62971969",
       "FACILITY_ID": "94",
       "ASC_FACILITY_ID": "",
-      "MIN_DATE": ""
+      "MIN_DATE": "2025-04-01"
     },
     "startTime": "2025-03-08T12:33:22.568Z",
     "status": "running",
-    "logs": []
-  },
-  "1741493819819": {
-    "id": "1741493819819",
-    "config": {
-      "EMAIL": "gurjodhhundal540@gmail.com",
-      "PASSWORD": "Hundal@1",
-      "COUNTRY": "ca",
-      "SCHEDULE_ID": "47182200",
-      "FACILITY_ID": "95",
-      "ASC_FACILITY_ID": "",
-      "MIN_DATE": ""
-    },
-    "status": "error",
-    "startTime": "2025-03-09T04:16:59.821Z",
-    "logs": []
-  },
-  "1741493847388": {
-    "id": "1741493847388",
-    "config": {
-      "EMAIL": "sukhjitnirmal5@gmail.com",
-      "PASSWORD": "Nirmal@1983",
-      "COUNTRY": "ca",
-      "SCHEDULE_ID": "47001159",
-      "FACILITY_ID": "95",
-      "ASC_FACILITY_ID": "",
-      "MIN_DATE": ""
-    },
-    "status": "error",
-    "startTime": "2025-03-09T04:17:27.389Z",
-    "logs": []
-  },
-  "1741494021028": {
-    "id": "1741494021028",
-    "config": {
-      "EMAIL": "nirmalsinghlehal22@gmail.com",
-      "PASSWORD": "Nirmal@2021",
-      "COUNTRY": "ca",
-      "SCHEDULE_ID": "66203361",
-      "FACILITY_ID": "95",
-      "ASC_FACILITY_ID": "",
-      "MIN_DATE": ""
-    },
-    "status": "running",
-    "startTime": "2025-03-09T04:20:21.028Z",
     "logs": []
   }
 }

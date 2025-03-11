@@ -697,8 +697,8 @@ class Bot:
             data=urlencode(body)
         )
     def process(self):
-        RANDOM_MINUTE = random.randint(2, 5)
-        RANDOM_SECOND = random.randint(40, 50)
+        RANDOM_MINUTE = random.randint(2, 3)
+        RANDOM_SECOND = random.randint(20, 30)
         print(f"Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
