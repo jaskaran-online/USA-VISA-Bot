@@ -758,19 +758,19 @@ class Bot:
             data=urlencode(body)
         )
     def process(self):
-        RANDOM_MINUTE = random.randint(2, 3)
-        RANDOM_SECOND = random.randint(20, 30)
+        RANDOM_MINUTE = random.randint(1, 2)
+        RANDOM_SECOND = random.randint(10, 25)
         print(f"[{self.config.email}] Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
-            time.sleep(1.5)
+            time.sleep(1)
             try:
                 now = datetime.now()
                 mod = now.minute % RANDOM_MINUTE
-
+                name_of_facility = FACILITIES.get(self.config.facility_id, self.config.facility_id)
                 if mod != 0 or now.second < RANDOM_SECOND:
                     if now.second % 10 == 0:
-                        self.logger(f"[{self.config.email}] ⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
+                        self.logger(f"[{self.config.email} : {name_of_facility}] ⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
                     continue
 
                 try:
