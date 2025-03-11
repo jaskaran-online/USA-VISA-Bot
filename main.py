@@ -370,6 +370,9 @@ class Bot:
         <p><strong>Max Date:</strong> {self.config.max_date or 'Not specified'}</p>
         <p><strong>Start Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
         """
+            
+        self.logger(f"🔔 Sending email notification for bot start")
+        self.logger(email_body)
         send_email(f"Visa Bot Started - {self.config.email}", email_body)
 
     def format_appointment_info(self, time_str: str, date_str: str, asc_time_str: Optional[str] = None, asc_date_str: Optional[str] = None) -> str:
@@ -907,9 +910,6 @@ class Bot:
                                 self.appointment_datetime.strftime(DATE_FORMAT)
                             )
 
-                            self.logger("🎉 Successfully booked appointment!")
-                            self.logger(log)
-                            
                             # Send email notification for successful booking
                             email_body = f"""
                             <h2>🎉 Appointment Successfully Booked!</h2>
@@ -920,6 +920,9 @@ class Bot:
                             <p><strong>New Appointment Time:</strong> {self.appointment_datetime.strftime('%H:%M')}</p>
                             <p><strong>Booked At:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                             """
+                            self.logger(email_body)
+                            self.logger(log)
+                            
                             send_email(f"Appointment Booked - {self.config.email}", email_body)
                             
                             booked = True
