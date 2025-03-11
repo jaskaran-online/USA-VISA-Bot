@@ -10,7 +10,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "running",
+    "status": "error",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -25,7 +25,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "running",
+    "status": "error",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -40,7 +40,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "running",
+    "status": "error",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -55,7 +55,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "running",
+    "status": "error",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -70,7 +70,7 @@
       "MIN_DATE": "2025-05-20"
     },
     "startTime": "2025-03-08T12:33:22.568Z",
-    "status": "running",
+    "status": "error",
     "logs": []
   }
 }

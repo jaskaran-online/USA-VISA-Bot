@@ -763,12 +763,12 @@ class Bot:
             data=urlencode(body)
         )
     def process(self):
-        RANDOM_MINUTE = random.randint(1, 2)
-        RANDOM_SECOND = random.randint(10, 25)
+        RANDOM_MINUTE = random.randint(1, 3)
+        RANDOM_SECOND = random.randint(25, 30)
         print(f"[{self.config.email}] Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
-            time.sleep(1)
+            time.sleep(RANDOM_MINUTE)
             try:
                 now = datetime.now()
                 mod = now.minute % RANDOM_MINUTE
@@ -957,7 +957,7 @@ class Bot:
                 <p><strong>Error:</strong> {str(err)}</p>
                 <p><strong>Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                 """
-                send_email(f"Visa Bot Error - {self.config.email}", error_body)
+                # send_email(f"Visa Bot Error - {self.config.email}", error_body)
 
 
 def main():
