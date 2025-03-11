@@ -4,10 +4,51 @@ const http = require('http');
 const { PythonShell } = require('python-shell');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+
+// Email configuration
+const emailConfig = {
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASSWORD || ''
+  }
+};
+
+const notificationEmail = process.env.NOTIFICATION_EMAIL || 'jaskaransingh4704@gmail.com';
+
+// Create email transporter
+const transporter = nodemailer.createTransport(emailConfig);
+
+// Function to send email
+async function sendEmail(subject, html) {
+  if (!emailConfig.auth.user || !emailConfig.auth.pass) {
+    console.log('Email credentials not configured. Skipping email notification.');
+    return;
+  }
+
+  try {
+    await transporter.sendMail({
+      from: emailConfig.auth.user,
+      to: notificationEmail,
+      subject,
+      html
+    });
+    console.log(`Email sent: ${subject}`);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+}
 
 app.use(express.static('public'));
 app.use(express.json());
@@ -290,6 +331,20 @@ app.post('/api/bot/restart/:id', (req, res) => {
           type, 
           timestamp: new Date().toISOString() 
         });
+        
+        // Check for successful booking
+        if (formattedMessage.includes('Successfully booked appointment')) {
+          // Send email notification
+          const emailHtml = `
+            <h2>🎉 Appointment Successfully Booked!</h2>
+            <p><strong>Email:</strong> ${bot.config.EMAIL}</p>
+            <p><strong>Country:</strong> ${bot.config.COUNTRY}</p>
+            <p><strong>Facility ID:</strong> ${bot.config.FACILITY_ID}</p>
+            <p><strong>Booked At:</strong> ${new Date().toLocaleString()}</p>
+            <p>Check the application for more details.</p>
+          `;
+          sendEmail(`Appointment Booked - ${bot.config.EMAIL}`, emailHtml);
+        }
       }
     };
     
@@ -305,6 +360,16 @@ app.post('/api/bot/restart/:id', (req, res) => {
     pyshell.on('error', (err) => {
       addLog(err.message, 'error');
       bot.status = 'error';
+      
+      // Send email notification for error
+      const emailHtml = `
+        <h2>⚠️ Visa Bot Error</h2>
+        <p><strong>Email:</strong> ${bot.config.EMAIL}</p>
+        <p><strong>Country:</strong> ${bot.config.COUNTRY}</p>
+        <p><strong>Error:</strong> ${err.message}</p>
+        <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+      `;
+      sendEmail(`Visa Bot Error - ${bot.config.EMAIL}`, emailHtml);
     });
     
     pyshell.on('close', (code) => {
@@ -313,6 +378,18 @@ app.post('/api/bot/restart/:id', (req, res) => {
       addLog(message, type);
       bot.status = code === 0 ? 'completed' : 'error';
       bot.pyshell = undefined;
+      
+      // Send email notification for unexpected close
+      if (code !== 0) {
+        const emailHtml = `
+          <h2>⚠️ Visa Bot Stopped</h2>
+          <p><strong>Email:</strong> ${bot.config.EMAIL}</p>
+          <p><strong>Country:</strong> ${bot.config.COUNTRY}</p>
+          <p><strong>Exit Code:</strong> ${code}</p>
+          <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+        `;
+        sendEmail(`Visa Bot Stopped - ${bot.config.EMAIL}`, emailHtml);
+      }
     });
     
     bot.pyshell = pyshell;
@@ -325,6 +402,18 @@ app.post('/api/bot/restart/:id', (req, res) => {
     
     // Send initial message
     addLog('Bot started');
+    
+    // Send email notification for bot start
+    const emailHtml = `
+      <h2>Visa Appointment Bot Started</h2>
+      <p><strong>Email:</strong> ${bot.config.EMAIL}</p>
+      <p><strong>Country:</strong> ${bot.config.COUNTRY}</p>
+      <p><strong>Facility ID:</strong> ${bot.config.FACILITY_ID || 'Not specified'}</p>
+      <p><strong>Min Date:</strong> ${bot.config.MIN_DATE}</p>
+      <p><strong>Max Date:</strong> ${bot.config.MAX_DATE || 'Not specified'}</p>
+      <p><strong>Start Time:</strong> ${new Date().toLocaleString()}</p>
+    `;
+    sendEmail(`Visa Bot Started - ${bot.config.EMAIL}`, emailHtml);
     
     // Save to file
     saveBotsToFile();

@@ -9,3 +9,4 @@ config
 /log.txt
 asc
 node_modules
+.env

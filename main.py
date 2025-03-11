@@ -4,6 +4,9 @@ import os.path
 import random
 import re
 import time
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, date, timedelta
 from typing import Optional, Dict, Any
 from urllib.parse import urlencode
@@ -12,6 +15,49 @@ import requests
 from bs4 import BeautifulSoup
 from requests import Response, HTTPError
 
+# Load environment variables for email
+def load_env():
+    env_vars = {}
+    try:
+        with open('.env', 'r') as f:
+            for line in f:
+                if '=' in line and not line.startswith('#'):
+                    key, value = line.strip().split('=', 1)
+                    env_vars[key] = value
+    except FileNotFoundError:
+        pass
+    return env_vars
+
+ENV = load_env()
+SMTP_HOST = ENV.get('SMTP_HOST', 'smtp.gmail.com')
+SMTP_PORT = int(ENV.get('SMTP_PORT', '587'))
+SMTP_USER = ENV.get('SMTP_USER', '')
+SMTP_PASSWORD = ENV.get('SMTP_PASSWORD', '')
+NOTIFICATION_EMAIL = ENV.get('NOTIFICATION_EMAIL', 'jaskaransingh4704@gmail.com')
+
+def send_email(subject, body, to_email=NOTIFICATION_EMAIL):
+    """Send email notification"""
+    if not SMTP_USER or not SMTP_PASSWORD:
+        print("Email credentials not configured. Skipping email notification.")
+        return False
+        
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = SMTP_USER
+        msg['To'] = to_email
+        msg['Subject'] = subject
+        
+        msg.attach(MIMEText(body, 'html'))
+        
+        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
+        server.starttls()
+        server.login(SMTP_USER, SMTP_PASSWORD)
+        server.send_message(msg)
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"Failed to send email: {str(e)}")
+        return False
 
 class ConfigLoader:
     """Handles loading and caching of JSON configuration files"""
@@ -313,6 +359,18 @@ class Bot:
         self.asc_dates = dict()
         
         self.logger(f"🌍 Initializing bot for {self.country_name}")
+        
+        # Send email notification for bot start
+        email_body = f"""
+        <h2>Visa Appointment Bot Started</h2>
+        <p><strong>Email:</strong> {self.config.email}</p>
+        <p><strong>Country:</strong> {self.country_name}</p>
+        <p><strong>Facility ID:</strong> {self.config.facility_id or 'Not specified'}</p>
+        <p><strong>Min Date:</strong> {self.config.min_date}</p>
+        <p><strong>Max Date:</strong> {self.config.max_date or 'Not specified'}</p>
+        <p><strong>Start Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+        """
+        send_email(f"Visa Bot Started - {self.config.email}", email_body)
 
     def format_appointment_info(self, time_str: str, date_str: str, asc_time_str: Optional[str] = None, asc_date_str: Optional[str] = None) -> str:
         """Format appointment information in a user-friendly way"""
@@ -699,7 +757,7 @@ class Bot:
     def process(self):
         RANDOM_MINUTE = random.randint(2, 3)
         RANDOM_SECOND = random.randint(20, 30)
-        print(f"Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
+        print(f"[{self.config.email}] Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
             time.sleep(1.5)
@@ -709,7 +767,7 @@ class Bot:
 
                 if mod != 0 or now.second < RANDOM_SECOND:
                     if now.second % 10 == 0:
-                        self.logger(f"⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
+                        self.logger(f"[{self.config.email}] ⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
                     continue
 
                 try:
@@ -851,6 +909,19 @@ class Bot:
 
                             self.logger("🎉 Successfully booked appointment!")
                             self.logger(log)
+                            
+                            # Send email notification for successful booking
+                            email_body = f"""
+                            <h2>🎉 Appointment Successfully Booked!</h2>
+                            <p><strong>Email:</strong> {self.config.email}</p>
+                            <p><strong>Country:</strong> {self.country_name}</p>
+                            <p><strong>Facility:</strong> {FACILITIES.get(self.config.facility_id, self.config.facility_id)}</p>
+                            <p><strong>New Appointment Date:</strong> {self.appointment_datetime.strftime(DATE_FORMAT)}</p>
+                            <p><strong>New Appointment Time:</strong> {self.appointment_datetime.strftime('%H:%M')}</p>
+                            <p><strong>Booked At:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+                            """
+                            send_email(f"Appointment Booked - {self.config.email}", email_body)
+                            
                             booked = True
                             break
 
@@ -869,6 +940,16 @@ class Bot:
                 return
             except Exception as err:
                 self.logger(err)
+                
+                # Send email notification for error
+                error_body = f"""
+                <h2>⚠️ Visa Bot Error</h2>
+                <p><strong>Email:</strong> {self.config.email}</p>
+                <p><strong>Country:</strong> {self.country_name}</p>
+                <p><strong>Error:</strong> {str(err)}</p>
+                <p><strong>Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+                """
+                send_email(f"Visa Bot Error - {self.config.email}", error_body)
 
 
 def main():
