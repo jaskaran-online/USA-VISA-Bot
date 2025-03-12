@@ -763,19 +763,28 @@ class Bot:
             data=urlencode(body)
         )
     def process(self):
-        RANDOM_MINUTE = random.randint(1, 3)
+        RANDOM_MINUTE = random.choice([1, 2, 3])
         RANDOM_SECOND = random.randint(25, 30)
+        WAIT_FOR_MINUTES = random.choice([30, 45, 60])
+        cool_down_server = False
         print(f"[{self.config.email}] Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
         while True:
-            time.sleep(RANDOM_MINUTE)
             try:
+                if cool_down_server:
+                    self.logger(f"😴 In cool-down mode. Waiting {WAIT_FOR_MINUTES} minutes...")
+                    time.sleep(WAIT_FOR_MINUTES * 60)
+                    cool_down_server = False
+                    continue
+                
+                time.sleep(RANDOM_MINUTE * 60)
                 now = datetime.now()
                 mod = now.minute % RANDOM_MINUTE
                 name_of_facility = FACILITIES.get(self.config.facility_id, self.config.facility_id)
+                
                 if mod != 0 or now.second < RANDOM_SECOND:
                     if now.second % 10 == 0:
-                        self.logger(f"[{self.config.email} : {name_of_facility}] ⏳ Wait: {RANDOM_MINUTE - mod} minutes and {RANDOM_SECOND - now.second} seconds left")
+                        self.logger(f"[{self.config.email} : {name_of_facility}] ⏳ Wait: {RANDOM_MINUTE - mod} minutes seconds left")
                     continue
 
                 try:
@@ -792,6 +801,7 @@ class Bot:
 
                 if not available_dates:
                     self.logger("😔 No appointment dates available at any location")
+                    cool_down_server = True
                     continue
 
                 # Show all available dates for user awareness
