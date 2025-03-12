@@ -10,7 +10,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "error",
+    "status": "running",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -25,7 +25,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "error",
+    "status": "running",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -40,7 +40,7 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "error",
+    "status": "running",
     "startTime": "2025-03-09T04:16:59.821Z",
     "logs": []
   },
@@ -55,8 +55,64 @@
       "ASC_FACILITY_ID": "",
       "MIN_DATE": "2025-04-01"
     },
-    "status": "error",
+    "status": "running",
     "startTime": "2025-03-09T04:16:59.821Z",
+    "logs": []
+  },
+  "65961964": {
+    "config": {
+      "EMAIL": "sukhjitkaurboparai83@gmail.com",
+      "PASSWORD": "Nirmal@1984",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "65961964",
+      "FACILITY_ID": "89",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "startTime": "2025-03-08T12:33:22.568Z",
+    "status": "running",
+    "logs": []
+  },
+  "659619641": {
+    "config": {
+      "EMAIL": "sukhjitkaurboparai83@gmail.com",
+      "PASSWORD": "Nirmal@1984",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "65961964",
+      "FACILITY_ID": "95",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "startTime": "2025-03-08T12:33:22.568Z",
+    "status": "running",
+    "logs": []
+  },
+  "66201045": {
+    "config": {
+      "EMAIL": "sukhjitnirmal5@gmail.com",
+      "PASSWORD": "Nirmal@1983",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66201045",
+      "FACILITY_ID": "89",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "startTime": "2025-03-08T12:33:22.568Z",
+    "status": "running",
+    "logs": []
+  },
+  "662010451": {
+    "config": {
+      "EMAIL": "sukhjitnirmal5@gmail.com",
+      "PASSWORD": "Nirmal@1983",
+      "COUNTRY": "ca",
+      "SCHEDULE_ID": "66201045",
+      "FACILITY_ID": "95",
+      "ASC_FACILITY_ID": "",
+      "MIN_DATE": "2025-04-01"
+    },
+    "startTime": "2025-03-08T12:33:22.568Z",
+    "status": "running",
     "logs": []
   },
   "1741437202567": {
@@ -70,7 +126,7 @@
       "MIN_DATE": "2025-05-20"
     },
     "startTime": "2025-03-08T12:33:22.568Z",
-    "status": "error",
+    "status": "running",
     "logs": []
   }
 }
