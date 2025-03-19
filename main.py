@@ -669,6 +669,12 @@ class Bot:
         )
         response.raise_for_status()
 
+        # [INFO] Get applications
+        # description: Get applications
+        # parameters:
+        # - None
+        # returns:
+        # - None
         applications = BeautifulSoup(response.text, HTML_PARSER).find_all("div", {"class": "application"})
 
         if not applications:
@@ -998,7 +1004,7 @@ class Bot:
     # returns:
     # - None
     def process(self):
-        RANDOM_MINUTE = random.randint(2, 3)
+        RANDOM_MINUTE = random.randint(1, 2)
         RANDOM_SECOND = random.randint(25, 36)
         print(f"[{self.config.email}] Please wait {RANDOM_MINUTE} minutes and {RANDOM_SECOND} seconds before starting the bot")
         self.init()
