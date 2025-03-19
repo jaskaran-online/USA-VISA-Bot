@@ -596,7 +596,7 @@ function setupAutoLogCleaning() {
 // Initialize auto log cleaning
 setupAutoLogCleaning();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000 ;
 server.listen(PORT, () => {
   console.log(`Server running on`);
   console.log(`http://localhost:${PORT}`);
