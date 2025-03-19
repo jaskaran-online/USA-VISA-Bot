@@ -1220,8 +1220,8 @@ class Bot:
                 <p><strong>Error:</strong> {str(err)}</p>
                 <p><strong>Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                 """
-                # [INFO] Send email notification for error
-                send_email(f"Visa Bot Error - {self.config.email}", error_body)
+                # [TODO]: Send email notification for error
+                # send_email(f"Visa Bot Error - {self.config.email}", error_body)
 
 # [INFO] Main entry point for the visa appointment bot
 # description: Main entry point for the visa appointment bot
