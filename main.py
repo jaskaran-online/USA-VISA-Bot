@@ -15,7 +15,11 @@ import requests
 from bs4 import BeautifulSoup
 from requests import Response, HTTPError
 
-# Load environment variables for email
+# [INFO] Load environment variables for email
+# description: Load environment variables from .env file
+# returns: Dictionary of environment variables
+# dependencies: .env file (required)
+
 def load_env():
     env_vars = {}
     try:
@@ -28,12 +32,22 @@ def load_env():
         pass
     return env_vars
 
+# [INFO] Load environment variables for email
 ENV = load_env()
 SMTP_HOST = ENV.get('SMTP_HOST', 'smtp.gmail.com')
 SMTP_PORT = int(ENV.get('SMTP_PORT', '587'))
 SMTP_USER = ENV.get('SMTP_USER', '')
 SMTP_PASSWORD = ENV.get('SMTP_PASSWORD', '')
 NOTIFICATION_EMAIL = ENV.get('NOTIFICATION_EMAIL', 'jaskaransingh4704@gmail.com')
+
+# [INFO] Send email notification
+# description: Sends an email notification
+# parameters:
+# - subject: str - subject of the email
+# - body: str - body of the email
+# - to_email: str - recipient of the email
+# returns: bool - True if email sent successfully, False otherwise
+# dependencies: .env file (required)
 
 def send_email(subject, body, to_email=NOTIFICATION_EMAIL):
     """Send email notification"""
@@ -59,6 +73,8 @@ def send_email(subject, body, to_email=NOTIFICATION_EMAIL):
         print(f"Failed to send email: {str(e)}")
         return False
 
+# [INFO] ConfigLoader class
+# description: Handles loading and caching of JSON configuration files
 class ConfigLoader:
     """Handles loading and caching of JSON configuration files"""
     
@@ -108,7 +124,9 @@ FILES = CONSTANTS["files"]
 LOG_FORMAT = CONSTANTS["log_format"]
 NONE = CONSTANTS["none_value"]
 
-# Load headers
+# [INFO] Load headers
+# description: Load headers from headers.json file
+
 HEADERS = config_loader.headers
 DEFAULT_HEADERS = {**HEADERS["default_headers"], "Host": HOST}
 CACHE_CONTROL_HEADERS = HEADERS["cache_control_headers"]
@@ -116,25 +134,34 @@ DOCUMENT_HEADERS = {**DEFAULT_HEADERS, **CACHE_CONTROL_HEADERS, **HEADERS["docum
 JSON_HEADERS = {**DEFAULT_HEADERS, **HEADERS["json_headers"]}
 SEC_FETCH_USER_HEADERS = HEADERS["sec_fetch_user_headers"]
 
-# Load facilities data
+# [INFO] Load facilities data
+# description: Load facilities data from facilities.json file
+
 FACILITIES_DATA = config_loader.facilities
 FACILITIES = FACILITIES_DATA["facilities"]
 ASC_FACILITIES = FACILITIES_DATA["asc_facilities"]
 
-# Load countries
+# [INFO] Load countries
+# description: Load countries from countries.json file
+
 COUNTRIES = config_loader.countries
 
-# Constants from formats
+# [INFO] Constants from formats
+# description: Load constants from formats.json file
+
 DATE_TIME_FORMAT = FORMATS["date_time_format"]
 DATE_FORMAT = FORMATS["date_format"]
 HTML_PARSER = FORMATS["html_parser"]
 
-# Constants from files
+# [INFO] Constants from files
+# description: Load constants from files.json file
 CONFIG_FILE = FILES["config_file"]
 ASC_FILE = FILES["asc_file"]
 LOG_FILE = FILES["log_file"]
 
-# Header keys
+# [INFO] Header keys
+# description: Load constants from header_keys.json file
+
 REFERER = HEADER_KEYS["referer"]
 ACCEPT = HEADER_KEYS["accept"]
 SET_COOKIE = HEADER_KEYS["set_cookie"]
@@ -142,20 +169,32 @@ CONTENT_TYPE = HEADER_KEYS["content_type"]
 COOKIE_HEADER = HEADER_KEYS["cookie_header"]
 X_CSRF_TOKEN_HEADER = HEADER_KEYS["x_csrf_token_header"]
 
+# [INFO] Date parser
+# description: Parse date string to date object
+# parameters:
+# - date_str: str - date string in format "YYYY-MM-DD"
+# returns: date - date object
 
 def parse_date(date_str: str) -> date:
     return datetime.strptime(date_str, "%Y-%m-%d").date()
 
+# [INFO] Custom exceptions
+# description: Custom exceptions for the bot
 
 class NoScheduleIdException(Exception):
     def __init__(self):
         super().__init__("❌ No appointment schedule found. Please make sure you have an active visa application.")
 
-
 class AppointmentDateLowerMinDate(Exception):
     def __init__(self):
         super().__init__("⚠️ Current appointment date is earlier than your specified minimum date")
 
+# [INFO] Logger
+# description: Enhanced logger with user-friendly messages
+
+# parameters:
+# - log_file: str - log file path
+# - log_format: str - log format
 
 class Logger:
     """Enhanced logger with user-friendly messages"""
@@ -208,6 +247,13 @@ class Logger:
         print(msg)  # Print directly to stdout for web UI
         self.root_logger.debug(message, exc_info=isinstance(message, Exception))
 
+# [INFO] Appointment
+# description: Appointment class for managing appointment details
+
+# parameters:
+# - schedule_id: str - appointment schedule ID
+# - description: str - appointment description
+# - appointment_datetime: Optional[datetime] - appointment datetime
 
 class Appointment:
     def __init__(self, schedule_id: str, description: str, appointment_datetime: Optional[datetime]):
@@ -223,7 +269,7 @@ class Config:
         self.config_file = config_file
         self.logger = logging.getLogger()
 
-        # Initialize with defaults
+        # [INFO] Initialize with defaults
         self.email: Optional[str] = None
         self.password: Optional[str] = None
         self.country: Optional[str] = None
@@ -236,6 +282,12 @@ class Config:
 
         self._load_config()
 
+    # [INFO] Load configuration from file with improved error handling
+    # description: Load configuration from file with improved error handling
+    # parameters:
+    # - config_file: str - path to configuration file
+    # returns:
+    # - None
     def _load_config(self):
         """Load configuration from file with improved error handling"""
         if not os.path.exists(self.config_file):
@@ -255,7 +307,12 @@ class Config:
                     else:
                         config_data[key] = None
 
-        # Validate required fields
+        # [INFO] Validate required fields
+        # description: Validate required fields
+        # parameters:
+        # - config_data: dict - configuration data
+        # returns:
+        # - None
         self.email = config_data.get("EMAIL")
         if not self.email:
             raise ValueError("❌ Email address is required in the configuration")
@@ -270,7 +327,13 @@ class Config:
         if self.country not in COUNTRIES:
             raise ValueError(f"❌ Invalid country code '{self.country}'. Valid options are: {', '.join(COUNTRIES.keys())}")
 
-        # Parse dates
+        # [INFO] Parse dates
+        # description: Parse dates
+        # parameters:
+        # - min_date: str - minimum date
+        # - max_date: str - maximum date
+        # returns:
+        # - None
         min_date = config_data.get("MIN_DATE")
         if min_date:
             try:
@@ -287,7 +350,14 @@ class Config:
                 self.logger.warning("⚠️ Invalid maximum date format, no maximum date will be used")
                 self.max_date = None
 
-        # Load optional fields
+        # [INFO] Load optional fields
+        # description: Load optional fields
+        # parameters:
+        # - schedule_id: str - appointment schedule ID
+        # - facility_id: str - facility ID
+        # - asc_facility_id: str - ASC facility ID
+        # returns:
+        # - None
         self.schedule_id = config_data.get("SCHEDULE_ID")
         if self.schedule_id:
             self.facility_id = config_data.get("FACILITY_ID")
@@ -300,6 +370,12 @@ class Config:
                 self.logger.warning(f"⚠️ Invalid ASC facility ID {self.asc_facility_id}, will auto-select from available facilities")
                 self.asc_facility_id = None
 
+    # [INFO] Set facility ID with user-friendly messages
+    # description: Set facility ID with user-friendly messages
+    # parameters:
+    # - locations: dict[str, str] - facility locations
+    # returns:
+    # - None
     def set_facility_id(self, locations: dict[str, str]):
         """Set facility ID with user-friendly messages"""
         if self.facility_id and self.facility_id in FACILITIES:
@@ -310,6 +386,12 @@ class Config:
         self.logger.info(f"🏢 Auto-selected facility: {self.facility_id} - {locations[self.facility_id]}")
         self.__save()
 
+    # [INFO] Set ASC facility ID with user-friendly messages
+    # description: Set ASC facility ID with user-friendly messages
+    # parameters:
+    # - locations: dict[str, str] - ASC facility locations
+    # returns:
+    # - None
     def set_asc_facility_id(self, locations: dict[str, str]):
         """Set ASC facility ID with user-friendly messages"""
         if self.asc_facility_id and self.asc_facility_id in ASC_FACILITIES:
@@ -320,6 +402,12 @@ class Config:
         self.logger.info(f"🏢 Auto-selected ASC facility: {self.asc_facility_id} - {ASC_FACILITIES.get(self.asc_facility_id, locations[self.asc_facility_id])}")
         self.__save()
 
+    # [INFO] Set schedule ID with user-friendly messages
+    # description: Set schedule ID with user-friendly messages
+    # parameters:
+    # - schedule_ids: dict[str, Appointment] - appointment schedule IDs
+    # returns:
+    # - None
     def set_schedule_id(self, schedule_ids: dict[str, Appointment]):
         """Set schedule ID with user-friendly messages"""
         self.schedule_id = next(iter(schedule_ids))
@@ -327,6 +415,12 @@ class Config:
         self.logger.info(f"📋 Selected schedule: {self.schedule_id} - {selected_appointment.description}")
         self.__save()
 
+    # [INFO] Save configuration to file
+    # description: Save configuration to file
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def __save(self):
         """Save configuration to file"""
         with open(self.config_file, "w") as f:
@@ -344,8 +438,17 @@ class Config:
         self.logger.debug("💾 Configuration saved")
 
 
+# [INFO] Bot class
+# description: Bot class
+# parameters:
+# - config: Config - configuration object
+# - logger: Logger - logger object
+# - asc_file: str - ASC file path
+# returns:
+# - None
 class Bot:
     def __init__(self, config: Config, logger: Logger, asc_file: str):
+        """Initialize bot"""
         self.logger = logger
         self.config = config
         self.asc_file = asc_file
@@ -360,7 +463,12 @@ class Bot:
         
         self.logger(f"🌍 Initializing bot for {self.country_name}")
         
-        # Send email notification for bot start
+        # [INFO] Send email notification for bot start
+        # description: Send email notification for bot start
+        # parameters:
+        # - None
+        # returns:
+        # - None
         email_body = f"""
         <h2>Visa Appointment Bot Started</h2>
         <p><strong>Email:</strong> {self.config.email}</p>
@@ -370,7 +478,7 @@ class Bot:
         <p><strong>Max Date:</strong> {self.config.max_date or 'Not specified'}</p>
         <p><strong>Start Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
         """
-            
+
         self.logger(f"🔔 Sending email notification for bot start")
         self.logger(f"🔔 Email: {self.config.email}")
         self.logger(f"🔔 Country: {self.country_name}")
@@ -380,6 +488,15 @@ class Bot:
         self.logger(f"🔔 Start Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         send_email(f"Visa Bot Started - {self.config.email}", email_body)
 
+    # [INFO] Format appointment information
+    # description: Format appointment information in a user-friendly way
+    # parameters:
+    # - time_str: str - appointment time
+    # - date_str: str - appointment date
+    # - asc_time_str: Optional[str] - ASC appointment time
+    # - asc_date_str: Optional[str] - ASC appointment date
+    # returns:
+    # - str: formatted appointment information
     def format_appointment_info(self, time_str: str, date_str: str, asc_time_str: Optional[str] = None, asc_date_str: Optional[str] = None) -> str:
         """Format appointment information in a user-friendly way"""
         log = (
@@ -405,6 +522,14 @@ class Bot:
         )
         return log
 
+    # [INFO] Safe request
+    # description: Make a request with proper error handling
+    # parameters:
+    # - method: str - HTTP method
+    # - url: str - URL to make request to
+    # - kwargs: dict - additional keyword arguments
+    # returns:
+    # - Response: response object
     def safe_request(self, method: str, url: str, **kwargs) -> Response:
         """Make a request with proper error handling"""
         try:
@@ -425,10 +550,23 @@ class Bot:
             self.logger(f"❌ Request failed: {str(e)}")
             raise
 
+    # [INFO] Get CSRF token
+    # description: Get CSRF token from response
+    # parameters:
+    # - response: Response - response object
+    # returns:
+    # - str: CSRF token
     @staticmethod
     def get_csrf(response: Response) -> str:
+        """Get CSRF token from response"""
         return BeautifulSoup(response.text, HTML_PARSER).find("meta", {"name": "csrf-token"})["content"]
 
+    # [INFO] Get headers
+    # description: Get headers for requests
+    # parameters:
+    # - None
+    # returns:
+    # - dict[str, str]: headers
     def headers(self) -> dict[str, str]:
         headers = dict()
 
@@ -440,6 +578,12 @@ class Bot:
 
         return headers
 
+    # [INFO] Initialize
+    # description: Initialize session and login
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def init(self):
         # noinspection PyBroadException
         try:
@@ -467,6 +611,12 @@ class Bot:
             f"{self.appointment_datetime.strftime(DATE_TIME_FORMAT) if self.appointment_datetime else 'No date'}"
         )
 
+    # [INFO] Login
+    # description: Login to website
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def login(self):
         self.logger("Get sign in")
         response = self.session.get(
@@ -502,6 +652,12 @@ class Bot:
         response.raise_for_status()
         self.cookie = response.headers.get(SET_COOKIE)
 
+    # [INFO] Initialize current data
+    # description: Initialize current data
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def init_current_data(self):
         self.logger("Get current appointment")
         response = self.session.get(
@@ -548,6 +704,12 @@ class Bot:
         if self.appointment_datetime and self.appointment_datetime.date() <= self.config.min_date:
             raise AppointmentDateLowerMinDate()
 
+    # [INFO] Initialize ASC dates
+    # description: Initialize ASC dates
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def init_asc_dates(self):
         if not self.config.need_asc or not self.config.asc_facility_id:
             return
@@ -588,12 +750,24 @@ class Bot:
         with open(self.asc_file, 'w') as f:
             json.dump(self.asc_dates, f)
 
+    # [INFO] Initialize CSRF and cookie
+    # description: Initialize CSRF and cookie
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def init_csrf_and_cookie(self):
         self.logger("Init csrf")
         response = self.load_change_appointment_page()
         self.cookie = response.headers.get(SET_COOKIE)
         self.csrf = Bot.get_csrf(response)
 
+    # [INFO] Get available locations
+    # description: Get available locations
+    # parameters:
+    # - element_id: str - element id
+    # returns:
+    # - dict[str, str]: facility id to location
     def get_available_locations(self, element_id: str) -> dict[str, str]:
         self.logger("Get location list")
         locations = (BeautifulSoup(self.load_change_appointment_page().text, HTML_PARSER)
@@ -605,6 +779,12 @@ class Bot:
                 facility_id_to_location[location["value"]] = location.text
         return facility_id_to_location
 
+    # [INFO] Get available facility id
+    # description: Get available facility id
+    # parameters:
+    # - None
+    # returns:
+    # - dict[str, str]: facility id to location
     def get_available_facility_id(self) -> dict[str, str]:
         self.logger("Get facility id list")
         locations = self.get_available_locations("appointments_consulate_appointment_facility_id")
@@ -614,6 +794,12 @@ class Bot:
             return facilities
         return locations
 
+    # [INFO] Get available ASC facility id
+    # description: Get available ASC facility id
+    # parameters:
+    # - None
+    # returns:
+    # - dict[str, str]: facility id to location
     def get_available_asc_facility_id(self) -> dict[str, str]:
         self.logger("Get asc facility id list")
         locations = self.get_available_locations("appointments_asc_appointment_facility_id")
@@ -623,6 +809,12 @@ class Bot:
             return facilities
         return locations
 
+    # [INFO] Load change appointment page
+    # description: Load change appointment page
+    # parameters:
+    # - None
+    # returns:
+    # - Response: response
     def load_change_appointment_page(self) -> Response:
         self.logger("Get new appointment")
         response = self.session.get(
@@ -637,6 +829,12 @@ class Bot:
         response.raise_for_status()
         return response
 
+    # [INFO] Get available dates
+    # description: Get available dates
+    # parameters:
+    # - None
+    # returns:
+    # - list[str]: available dates
     def get_available_dates(self) -> list[str]:
         self.logger("Get available date")
         response = self.session.get(
@@ -655,6 +853,12 @@ class Bot:
         dates.sort()
         return dates
 
+    # [INFO] Get available times
+    # description: Get available times
+    # parameters:
+    # - available_date: str - available date
+    # returns:
+    # - list[str]: available times
     def get_available_times(self, available_date: str) -> list[str]:
         self.logger("Get available time")
         response = self.session.get(
@@ -672,6 +876,13 @@ class Bot:
         times.sort()
         return times
 
+    # [INFO] Get available dates ASC
+    # description: Get available dates ASC
+    # parameters:
+    # - available_date: Optional[str] - available date
+    # - available_time: Optional[str] - available time
+    # returns:
+    # - list[str]: available dates
     def get_asc_available_dates(
             self,
             available_date: Optional[str] = None,
@@ -696,6 +907,14 @@ class Bot:
         dates.sort()
         return dates
 
+    # [INFO] Get available times ASC
+    # description: Get available times ASC
+    # parameters:
+    # - asc_available_date: str - asc available date
+    # - available_date: Optional[str] - available date
+    # - available_time: Optional[str] - available time
+    # returns:
+    # - list[str]: available times
     def get_asc_available_times(
             self,
             asc_available_date: str,
@@ -721,6 +940,15 @@ class Bot:
         times.sort()
         return times
 
+    # [INFO] Book
+    # description: Book
+    # parameters:
+    # - available_date: str - available date
+    # - available_time: str - available time
+    # - asc_available_date: Optional[str] - asc available date
+    # - asc_available_time: Optional[str] - asc available time
+    # returns:
+    # - None
     def book(
             self,
             available_date: str,
@@ -762,6 +990,13 @@ class Bot:
             },
             data=urlencode(body)
         )
+
+    # [INFO] Process
+    # description: Process bot workflow
+    # parameters:
+    # - None
+    # returns:
+    # - None
     def process(self):
         RANDOM_MINUTE = random.randint(2, 3)
         RANDOM_SECOND = random.randint(25, 36)
@@ -790,16 +1025,18 @@ class Bot:
                     self.logger("⏳ Checking for appointments...")
                     available_dates = self.get_available_dates()
 
-                if not available_dates:
+                if not available_dates: # [INFO] No available dates
                     self.logger("😔 No appointment dates available at any location")
+                    time.sleep(10 * 60) # [INFO] Wait for 10 minutes before checking again
                     continue
 
-                # Show all available dates for user awareness
+                # [INFO] Show all available dates for user awareness
                 dates_info = []
                 after_current_found = False
                 after_current_count = 0
                 MAX_AFTER_DATES = 2
                 
+                # [INFO] Filter available dates
                 for date_str in available_dates:
                     date_obj = parse_date(date_str)
                     
@@ -824,30 +1061,41 @@ class Bot:
                 if dates_info:
                     self.logger("\n".join(dates_info))
                     
-                # Add a blank line after the dates list
+                # [INFO] Add a blank line after the dates list
                 self.logger("")
 
                 reinit_asc = False
+
+                # [INFO] Check available times
                 for available_date_str in available_dates:
                     available_date = parse_date(available_date_str)
 
+                    # [INFO] Skip dates before min date
                     if available_date <= self.config.min_date:
                         continue
 
+                    # [INFO] Skip dates after current appointment
                     if self.appointment_datetime and available_date >= self.appointment_datetime.date():
                         continue
 
+                    # [INFO] Skip dates after max date
                     if self.config.max_date and available_date > self.config.max_date:
                         continue
 
+                    # [INFO] Get available times
                     available_times = self.get_available_times(available_date_str)
+
+                    # [INFO] Check if there are available times
                     if not available_times:
                         self.logger(f"⏰ No available time slots for {available_date_str}")
                         continue
 
+                    # [INFO] Log available times
                     self.logger(f"⏰ Available times for {available_date_str}: {', '.join(available_times)}")
 
                     booked = False
+
+                    # [INFO] Try to book
                     for available_time_str in available_times:
                         self.logger(f"🎯 Trying time slot: {available_time_str}")
 
@@ -860,18 +1108,21 @@ class Bot:
 
                             min_asc_date = available_date - timedelta(days=7)
 
+                            # [INFO] Get available times for ASC
                             for k, v in self.asc_dates.items():
                                 if min_asc_date <= parse_date(k) < available_date and len(v) > 0:
                                     asc_available_date_str = k
                                     asc_available_time_str = random.choice(v)
                                     break
 
+                            # [INFO] Get available times for ASC
                             if not asc_available_date_str or not asc_available_time_str:
                                 asc_available_dates = self.get_asc_available_dates(
                                     available_date_str,
                                     available_time_str
                                 )
 
+                                # [INFO] Check if there are available times for ASC
                                 if not asc_available_dates:
                                     self.logger("🏢 No ASC dates available for this time slot")
                                     break
@@ -884,17 +1135,19 @@ class Bot:
                                     available_time_str
                                 )
 
+                                # [INFO] Check if there are available times for ASC
                                 if not asc_available_times:
                                     self.logger("🏢 No ASC time slots available for this date")
                                     continue
 
                                 asc_available_time_str = random.choice(asc_available_times)
 
-                        log = self.format_appointment_info(
-                            available_time_str,
-                            available_date_str,
-                            asc_available_time_str,
-                            asc_available_date_str
+                            # [INFO] Log available times
+                            log = self.format_appointment_info(
+                                available_time_str,
+                                available_date_str,
+                                asc_available_time_str,
+                                asc_available_date_str
                         )
 
                         self.logger(log)
@@ -906,16 +1159,18 @@ class Bot:
                             asc_available_time_str
                         )
 
+                        # [INFO] Book appointment
                         appointment_datetime = self.appointment_datetime
                         self.init_current_data()
 
+                        # [INFO] Check if appointment was booked
                         if appointment_datetime != self.appointment_datetime:
                             log = self.format_appointment_info(
                                 self.appointment_datetime.strftime(DATE_TIME_FORMAT),
                                 self.appointment_datetime.strftime(DATE_FORMAT)
                             )
 
-                            # Send email notification for successful booking
+                            # [INFO] Send email notification for successful booking
                             email_body = f"""
                             <h2>🎉 Appointment Successfully Booked!</h2>
                             <p><strong>Email:</strong> {self.config.email}</p>
@@ -928,6 +1183,7 @@ class Bot:
                             self.logger(email_body)
                             self.logger(log)
                             
+                            # [INFO] Send email notification for successful booking
                             send_email(f"Appointment Booked - {self.config.email}", email_body)
                             
                             booked = True
@@ -935,6 +1191,7 @@ class Bot:
 
                     reinit_asc = True
 
+                    # [INFO] Check if appointment was booked
                     if booked:
                         break
 
@@ -949,7 +1206,7 @@ class Bot:
             except Exception as err:
                 self.logger(err)
                 
-                # Send email notification for error
+                # [INFO] Send email notification for error
                 error_body = f"""
                 <h2>⚠️ Visa Bot Error</h2>
                 <p><strong>Email:</strong> {self.config.email}</p>
@@ -957,8 +1214,15 @@ class Bot:
                 <p><strong>Error:</strong> {str(err)}</p>
                 <p><strong>Time:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                 """
-                # send_email(f"Visa Bot Error - {self.config.email}", error_body)
+                # [INFO] Send email notification for error
+                send_email(f"Visa Bot Error - {self.config.email}", error_body)
 
+# [INFO] Main entry point for the visa appointment bot
+# description: Main entry point for the visa appointment bot
+# parameters:
+# - None
+# returns:
+# - None
 
 def main():
     """Main entry point for the visa appointment bot"""
@@ -983,15 +1247,27 @@ def main():
         print("\n⏳ Starting appointment search process...")
         print("Press Ctrl+C to stop the bot at any time\n")
         
+        # [INFO] Start the bot
+        # description: Start the bot
+        # parameters:
+        # - None
+        # returns:
+        # - None
         bot.process()
         
-    except KeyboardInterrupt:
+    except KeyboardInterrupt: # [INFO] Handle keyboard interrupt
         print("\n\n👋 Bot stopped by user. Goodbye!")
-    except Exception as e:
+    except Exception as e: # [INFO] Handle other exceptions
         print(f"\n❌ Error: {str(e)}")
         print("\nFor help, please check the documentation or report this issue.")
         sys.exit(1)
 
+# [INFO] Main entry point for the visa appointment bot
+# description: Main entry point for the visa appointment bot
+# parameters:
+# - None
+# returns:
+# - None
 
 if __name__ == "__main__":
     main()
