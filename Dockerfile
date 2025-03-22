@@ -30,8 +30,11 @@ RUN python3 -m venv venv && \
 # Copy application code
 COPY . .
 
-# Expose port
-EXPOSE 3000
+# Make start.sh executable
+RUN chmod +x start.sh
 
-# Start the application
-CMD ["sh", "-c", "node app.js"] 
+# Expose port
+EXPOSE 6000
+
+# Start using start.sh
+CMD ["./start.sh"] 
