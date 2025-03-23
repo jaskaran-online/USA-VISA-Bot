@@ -1032,8 +1032,8 @@ class Bot:
                     available_dates = self.get_available_dates()
 
                 if not available_dates: # [INFO] No available dates
-                    self.logger("😔 No appointment dates available at any location")
-                    time.sleep(10 * 60) # [INFO] Wait for 10 minutes before checking again
+                    self.logger("😔 No appointment dates available at any location. Colling down server!")
+                    time.sleep(58 * 60) # [INFO] Wait for 10 minutes before checking again
                     continue
 
                 # [INFO] Show all available dates for user awareness
