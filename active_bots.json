@@ -1,41 +1,13 @@
 {
-  "659619641": {
+  "67023950": {
     "config": {
-      "EMAIL": "sukhjitkaurboparai83@gmail.com",
-      "PASSWORD": "Nirmal@1984",
+      "EMAIL": "ssoniasaraiya1383@gmail.com",
+      "PASSWORD": "Sonia@1991",
       "COUNTRY": "ca",
-      "SCHEDULE_ID": "65961964",
-      "FACILITY_ID": "95",
+      "SCHEDULE_ID": "67023950",
+      "FACILITY_ID": "92",
       "ASC_FACILITY_ID": "",
-      "MIN_DATE": "2025-04-01"
-    },
-    "startTime": "2025-03-08T12:33:22.568Z",
-    "status": "running",
-    "logs": []
-  },
-  "662010451": {
-    "config": {
-      "EMAIL": "sukhjitnirmal5@gmail.com",
-      "PASSWORD": "Nirmal@1983",
-      "COUNTRY": "ca",
-      "SCHEDULE_ID": "66201045",
-      "FACILITY_ID": "95",
-      "ASC_FACILITY_ID": "",
-      "MIN_DATE": "2025-04-01"
-    },
-    "startTime": "2025-03-08T12:33:22.568Z",
-    "status": "running",
-    "logs": []
-  },
-  "1741437202567": {
-    "config": {
-      "EMAIL": "sandhunavpreet009@gmail.com",
-      "PASSWORD": "Navpreet@sandhu123",
-      "COUNTRY": "ca",
-      "SCHEDULE_ID": "62971969",
-      "FACILITY_ID": "94",
-      "ASC_FACILITY_ID": "",
-      "MIN_DATE": "2025-05-20"
+      "MIN_DATE": "2025-04-20"
     },
     "startTime": "2025-03-08T12:33:22.568Z",
     "status": "running",

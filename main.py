@@ -47,30 +47,34 @@ NOTIFICATION_EMAIL = ENV.get('NOTIFICATION_EMAIL', 'jaskaransingh4704@gmail.com'
 # - body: str - body of the email
 # - to_email: str - recipient of the email
 # returns: bool - True if email sent successfully, False otherwise
-# dependencies: .env file (required)
+# dependencies: .env file (
 
 def send_email(subject, body, to_email=NOTIFICATION_EMAIL):
     """Send email notification"""
     if not SMTP_USER or not SMTP_PASSWORD:
-        print("Email credentials not configured. Skipping email notification.")
+        print("⚠️ Email credentials not configured. Skipping email notification.")
         return False
-        
+
     try:
+        print(f"📧 Sending email to {to_email} via {SMTP_HOST}:{SMTP_PORT}")
+        
         msg = MIMEMultipart()
         msg['From'] = SMTP_USER
         msg['To'] = to_email
         msg['Subject'] = subject
-        
         msg.attach(MIMEText(body, 'html'))
-        
-        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
+
+        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)  # Set timeout
+        server.set_debuglevel(1)  # Enable detailed debugging
         server.starttls()
         server.login(SMTP_USER, SMTP_PASSWORD)
         server.send_message(msg)
         server.quit()
+        
+        print("✅ Email sent successfully!")
         return True
     except Exception as e:
-        print(f"Failed to send email: {str(e)}")
+        print(f"❌ Failed to send email: {str(e)}")
         return False
 
 # [INFO] ConfigLoader class
@@ -1149,14 +1153,14 @@ class Bot:
                                 asc_available_time_str = random.choice(asc_available_times)
 
                             # [INFO] Log available times
-                            log = self.format_appointment_info(
-                                available_time_str,
-                                available_date_str,
-                                asc_available_time_str,
-                                asc_available_date_str
-                        )
+                            # log = self.format_appointment_info(
+                            #     available_time_str,
+                            #     available_date_str,
+                            #     asc_available_time_str,
+                            #     asc_available_date_str
+                            # )
 
-                        self.logger(log)
+                        # self.logger(log)
 
                         self.book(
                             available_date_str,
@@ -1187,7 +1191,6 @@ class Bot:
                             <p><strong>Booked At:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
                             """
                             self.logger(email_body)
-                            self.logger(log)
                             
                             # [INFO] Send email notification for successful booking
                             send_email(f"Appointment Booked - {self.config.email}", email_body)
