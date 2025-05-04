@@ -245,8 +245,12 @@ function addBotToUI(bot) {
     div.classList.add('selected');
     document.querySelectorAll('.bot-instance').forEach(b => b.classList.remove('selected'));
     
-    // Set email in bot header
-    div.querySelector('.bot-email').textContent = bot.config.EMAIL || 'No email';
+    // Add bot name to the header
+    const botName = bot.name || `Bot ${bot.id.slice(-4)}`;
+    const nameEl = document.createElement('span');
+    nameEl.className = 'text-xs font-normal text-indigo-400 ml-2';
+    nameEl.textContent = botName;
+    div.querySelector('.bot-email').after(nameEl);
     
     // Update UI with bot data
     updateBotUI(bot.id, bot);
@@ -267,8 +271,13 @@ function updateBotUI(id, bot) {
     const div = document.querySelector(`.bot-instance[data-bot-id="${id}"]`);
     if (!div) return;
     
-    // Update email
+    // Update name and email
+    const botName = bot.name || `Bot ${id.slice(-4)}`;
     div.querySelector('.bot-email').textContent = bot.config.EMAIL || 'No email';
+    div.querySelector('.bot-email').setAttribute('title', botName);
+    
+    // Add bot name as a data attribute for filtering
+    div.dataset.botName = botName;
     
     // Update country
     const countryEl = div.querySelector('.bot-country');
